@@ -1,143 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>5 Кувшинов</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <title>5 Кувшинов - Счастье</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-<!-- Стартовый экран -->
-<div id="start-screen" class="flex flex-col items-center justify-center min-h-screen p-4">
-  <h1 class="text-5xl font-bold mb-6">🏺 5 Кувшинов</h1>
-  <p class="text-xl mb-4 text-center max-w-lg">Игра о том, как сбалансировать Здоровье, Счастье и Финансы.<br>Пройди путь к финансовой свободе!</p>
-  <div class="mt-6 bg-white p-4 rounded shadow text-center max-w-md">
-    <h2 class="text-2xl font-bold mb-2">Как играть</h2>
-    <p class="mb-2">1️⃣ Каждый ход ты получаешь активный и пассивный доход.</p>
-    <p class="mb-2">2️⃣ Оплачивай обязательные расходы и распределяй оставшиеся деньги: на сбережения, инвестиции, комфорт или развитие.</p>
-    <p>3️⃣ Сохраняй здоровье и счастье выше 0% и построй финансовую свободу за выбранное количество ходов!</p>
-  </div>
-  <button onclick="startGame()" class="mt-8 bg-blue-600 text-white text-xl font-semibold px-8 py-4 rounded hover:bg-blue-700 transition">
-    Начать игру
-  </button>
-</div>
+<div class="min-h-screen flex flex-col items-center justify-center p-6">
+  <h1 class="text-4xl font-bold mb-6">🏺 5 Кувшинов</h1>
 
-<!-- Основной экран игры -->
-<div id="game-screen" class="hidden p-6">
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-2 max-w-5xl mx-auto">
+  <div class="bg-white p-6 rounded shadow w-full max-w-xl space-y-4">
+
     <div>
-      <div class="mb-4">
-        <label class="block text-lg font-bold mb-2">Ходы:</label>
-        <input id="turns" type="number" value="10" max="100" min="1" class="w-full border p-2 rounded" />
-      </div>
-      <button onclick="nextTurn()" class="w-full bg-green-500 text-white p-3 rounded font-bold hover:bg-green-600 transition">
-        Следующий ход
-      </button>
+      <label class="font-semibold block mb-1">Траты на комфорт ($):</label>
+      <input id="comfortSpend" type="number" value="500" class="w-full border p-2 rounded" />
     </div>
     <div>
-      <div class="mb-4">
-        <label class="block text-lg font-bold mb-2">Свободные деньги: $<span id="freeMoney">0</span></label>
-      </div>
+      <label class="font-semibold block mb-1">Работа дополнительно?</label>
+      <select id="extra" class="w-full border p-2 rounded">
+        <option value="нет">Нет</option>
+        <option value="да">Да</option>
+      </select>
     </div>
-  </div>
-  <div class="mt-10 grid gap-4 max-w-5xl mx-auto">
-    <div>
-      <label class="block text-lg font-semibold mb-1">Здоровье</label>
-      <div class="w-full bg-gray-300 rounded-full h-6">
-        <div id="healthBar" class="bg-green-500 h-6 rounded-full" style="width:100%"></div>
-      </div>
-    </div>
-    <div>
-      <label class="block text-lg font-semibold mb-1">Счастье</label>
-      <div class="w-full bg-gray-300 rounded-full h-6">
-        <div id="happinessBar" class="bg-yellow-400 h-6 rounded-full" style="width:90%"></div>
-      </div>
-    </div>
-    <div>
-      <label class="block text-lg font-semibold mb-1">Сбережения ($)</label>
-      <div class="w-full bg-gray-300 rounded-full h-6">
-        <div id="savingsBar" class="bg-blue-400 h-6 rounded-full" style="width:10%"></div>
-      </div>
-    </div>
-    <div>
-      <label class="block text-lg font-semibold mb-1">Инвестиции ($)</label>
-      <div class="w-full bg-gray-300 rounded-full h-6">
-        <div id="investmentBar" class="bg-purple-500 h-6 rounded-full" style="width:10%"></div>
-      </div>
+
+    <button onclick="calculateHappiness()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition">
+      Рассчитать счастье
+    </button>
+
+    <div class="mt-6 text-center">
+      <p><strong>Счастье на конец месяца:</strong> <span id="happinessResult">90%</span></p>
     </div>
   </div>
 </div>
 
 <script>
-let health = 100;
-let happiness = 90;
-let savings = 1000;
-let investments = 1000;
-let activeIncome = 2000;
-let passiveIncome = 50;
-let turn = 0;
-let maxTurns = 10;
+let happinessStart = 90;
+const baseComfort = 500;
+const baseSurvival = 500;
 
-function startGame() {
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('game-screen').classList.remove('hidden');
-  updateBars();
-}
+function calculateHappiness() {
+  const comfortSpend = parseFloat(document.getElementById('comfortSpend').value);
+  const extra = document.getElementById('extra').value;
 
-function nextTurn() {
-  turn++;
-  maxTurns = document.getElementById('turns').value;
+  let happiness = happinessStart;
 
-  if (turn > maxTurns || health <= 0 || happiness <= 0) {
-    alert("Игра окончена! Вы прошли " + (turn-1) + " ходов.");
-    location.reload();
-    return;
+  // снижение из-за недофинансирования комфорта
+  if (comfortSpend < baseComfort) {
+    happiness -= ((baseComfort - comfortSpend) / baseComfort) * 10;
   }
 
-  const income = activeIncome + passiveIncome;
-  const expenses = 1300;
-  let freeMoney = income - expenses;
-  document.getElementById('freeMoney').innerText = freeMoney;
-
-  const investChange = Math.random() <= 0.7 ? Math.random()*0.10 : Math.random()*-0.05;
-  investments *= (1 + investChange);
-
-  const eventRoll = Math.random();
-  if (eventRoll < 0.15) {
-    savings -= 100;
-    alert("Непредвиденные траты: -$100");
-  } else if (eventRoll < 0.25) {
-    investments *= 0.9;
-    alert("Мини-кризис: инвестиции упали на 10%");
-  } else if (eventRoll < 0.30) {
-    savings += 500;
-    alert("Премия! +$500 к сбережениям");
-  } else if (eventRoll < 0.36) {
-    health -= 10;
-    alert("Болезнь: здоровье -10%");
-  } else if (eventRoll < 0.40) {
-    activeIncome *= 1.05;
-    alert("Повышение на работе! Доход +5%");
+  // снижение за переработку
+  if (extra === "да") {
+    happiness -= 0.01 * baseSurvival; // 1% от базового выживания
   }
 
-  if (health < 100 && happiness > 70) {
-    health += 3;
-    if (health > 100) health = 100;
-  }
+  happiness = Math.max(0, happiness);
 
-  if (freeMoney < 0) {
-    happiness -= 5;
-  }
-
-  updateBars();
-}
-
-function updateBars() {
-  document.getElementById('healthBar').style.width = health + '%';
-  document.getElementById('happinessBar').style.width = happiness + '%';
-  document.getElementById('savingsBar').style.width = Math.min((savings/10000)*100, 100) + '%';
-  document.getElementById('investmentBar').style.width = Math.min((investments/10000)*100, 100) + '%';
+  document.getElementById('happinessResult').innerText = `${Math.round(happiness)}%`;
 }
 </script>
 </body>
