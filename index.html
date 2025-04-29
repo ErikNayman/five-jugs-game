@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="ru"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;5 Кувшинов&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="icon" href="favicon.ico" type="image/x-icon"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="bg-gray-100"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Стартовый экран --&gt;</p>
+<p class="p1">&lt;div id="start-screen" class="flex flex-col items-center justify-center min-h-screen p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h1 class="text-5xl font-bold mb-6"&gt;🏺 5 Кувшинов&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;p class="text-xl mb-4 text-center max-w-lg"&gt;Игра о том, как сбалансировать Здоровье, Счастье и Финансы.&lt;br&gt;Пройди путь к финансовой свободе!&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="mt-6 bg-white p-4 rounded shadow text-center max-w-md"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2 class="text-2xl font-bold mb-2"&gt;Как играть&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p class="mb-2"&gt;1️⃣ Каждый ход ты получаешь активный и пассивный доход.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p class="mb-2"&gt;2️⃣ Оплачивай обязательные расходы и распределяй оставшиеся деньги: на сбережения, инвестиции, комфорт или развитие.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;3️⃣ Сохраняй здоровье и счастье выше 0% и построй финансовую свободу за выбранное количество ходов!&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="startGame()" class="mt-8 bg-blue-600 text-white text-xl font-semibold px-8 py-4 rounded hover:bg-blue-700 transition"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>Начать игру</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Основной экран игры --&gt;</p>
+<p class="p1">&lt;div id="game-screen" class="hidden p-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="grid grid-cols-1 gap-4 md:grid-cols-2 max-w-5xl mx-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label class="block text-lg font-bold mb-2"&gt;Ходы:&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="turns" type="number" value="10" max="100" min="1" class="w-full border p-2 rounded" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button onclick="nextTurn()" class="w-full bg-green-500 text-white p-3 rounded font-bold hover:bg-green-600 transition"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Следующий ход</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label class="block text-lg font-bold mb-2"&gt;Свободные деньги: $&lt;span id="freeMoney"&gt;0&lt;/span&gt;&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="mt-10 grid gap-4 max-w-5xl mx-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label class="block text-lg font-semibold mb-1"&gt;Здоровье&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="w-full bg-gray-300 rounded-full h-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="healthBar" class="bg-green-500 h-6 rounded-full" style="width:100%"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label class="block text-lg font-semibold mb-1"&gt;Счастье&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="w-full bg-gray-300 rounded-full h-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="happinessBar" class="bg-yellow-400 h-6 rounded-full" style="width:90%"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label class="block text-lg font-semibold mb-1"&gt;Сбережения ($)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="w-full bg-gray-300 rounded-full h-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="savingsBar" class="bg-blue-400 h-6 rounded-full" style="width:10%"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label class="block text-lg font-semibold mb-1"&gt;Инвестиции ($)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="w-full bg-gray-300 rounded-full h-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="investmentBar" class="bg-purple-500 h-6 rounded-full" style="width:10%"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">let health = 100;</p>
+<p class="p1">let happiness = 90;</p>
+<p class="p1">let savings = 1000;</p>
+<p class="p1">let investments = 1000;</p>
+<p class="p1">let activeIncome = 2000;</p>
+<p class="p1">let passiveIncome = 50;</p>
+<p class="p1">let turn = 0;</p>
+<p class="p1">let maxTurns = 10;</p>
+<p class="p2"><br></p>
+<p class="p1">function startGame() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('start-screen').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('game-screen').classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>updateBars();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function nextTurn() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>turn++;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>maxTurns = document.getElementById('turns').value;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (turn &gt; maxTurns || health &lt;= 0 || happiness &lt;= 0) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>alert("Игра окончена! Вы прошли " + (turn-1) + " ходов.");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>location.reload();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const income = activeIncome + passiveIncome;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const expenses = 1300;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let freeMoney = income - expenses;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('freeMoney').innerText = freeMoney;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Монте-Карло рост инвестиций</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const investChange = Math.random() &lt;= 0.7 ? Math.random()*0.10 : Math.random()*-0.05;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>investments *= (1 + investChange);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Случайные события</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const eventRoll = Math.random();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (eventRoll &lt; 0.15) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>savings -= 100;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>alert("Непредвиденные траты: -$100");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else if (eventRoll &lt; 0.25) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>investments *= 0.9;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>alert("Мини-кризис: инвестиции упали на 10%");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else if (eventRoll &lt; 0.30) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>savings += 500;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>alert("Премия! +$500 к сбережениям");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else if (eventRoll &lt; 0.36) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>health -= 10;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>alert("Болезнь: здоровье -10%");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else if (eventRoll &lt; 0.40) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>activeIncome *= 1.05;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>alert("Повышение на работе! Доход +5%");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Пассивное восстановление здоровья при хорошем состоянии</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (health &lt; 100 &amp;&amp; happiness &gt; 70) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>health += 3;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (health &gt; 100) health = 100;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Если переработка — падение счастья</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (freeMoney &lt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>happiness -= 5;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Обновление шкал</p>
+<p class="p1"><span class="Apple-converted-space">  </span>updateBars();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function updateBars() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('healthBar').style.width = health + '%';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('happinessBar').style.width = happiness + '%';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('savingsBar').style.width = Math.min((savings/10000)*100, 100) + '%';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('investmentBar').style.width = Math.min((investments/10000)*100, 100) + '%';</p>
+<p class="p1">}</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
