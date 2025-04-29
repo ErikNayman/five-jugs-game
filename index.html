@@ -2,39 +2,106 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>5 Кувшинов — График результата</title>
+  <title>5 Кувшинов — Полный пакет</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100">
 
-<div class="min-h-screen flex flex-col items-center p-6 space-y-6">
+<div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
+  <h1 class="text-4xl font-bold mb-6 text-center">🏺 5 Кувшинов</h1>
+  <div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4 text-center">
+    <h2 class="text-xl font-semibold mb-2">Выбери длительность игры:</h2>
+    <button onclick="startGame(24)" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">24 месяца</button>
+    <button onclick="startGame(36)" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">36 месяцев</button>
+  </div>
+</div>
 
-  <div class="text-center">
-    <h1 class="text-4xl font-bold mb-4">🏺 5 Кувшинов — Накопительный результат</h1>
-    <button onclick="runTurn()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 font-bold">Провести ход</button>
+<div id="game-screen" class="hidden p-6 space-y-4 max-w-5xl mx-auto">
+  <div class="grid grid-cols-2 gap-4">
+    <input id="survival" type="number" placeholder="Траты на выживание ($)" class="border p-2 rounded" value="500">
+    <input id="comfort" type="number" placeholder="Траты на комфорт ($)" class="border p-2 rounded" value="500">
+    <input id="save" type="number" placeholder="На сбережения ($)" class="border p-2 rounded" value="0">
+    <input id="invest" type="number" placeholder="На инвестиции ($)" class="border p-2 rounded" value="0">
+    <input id="healthSpend" type="number" placeholder="На здоровье ($)" class="border p-2 rounded" value="0">
+    <input id="edu" type="number" placeholder="На образование ($)" class="border p-2 rounded" value="0">
+    <select id="extra" class="border p-2 rounded col-span-2">
+      <option value="нет">Работать дополнительно? Нет</option>
+      <option value="да">Работать дополнительно? Да</option>
+    </select>
   </div>
 
-  <div id="summary" class="w-full max-w-3xl bg-white rounded shadow p-4">
-    <p>Ход: <span id="turn">0</span></p>
+  <button onclick="runTurn()" class="w-full mt-4 bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">Провести ход</button>
+
+  <div class="text-center space-y-2 mt-4">
+    <p>Ход: <span id="turn">0</span> / <span id="maxTurns">0</span></p>
     <p>Событие: <span id="event">-</span></p>
-    <p>Текущий балл: <span id="score">0</span></p>
+    <p>Свободные деньги: <span id="free">$0</span></p>
+    <p>Сбережения: <span id="savings">$0</span></p>
+    <p>Инвестиции: <span id="investments">$0</span></p>
+
+    <p>Здоровье: <span id="healthResult">100%</span></p>
+    <div class="w-full h-3 bg-gray-300 rounded-full">
+      <div id="healthBar" class="h-3 bg-green-500 rounded-full" style="width: 100%;"></div>
+    </div>
+
+    <p class="mt-2">Счастье: <span id="happinessResult">90%</span></p>
+    <div class="w-full h-3 bg-gray-300 rounded-full">
+      <div id="happinessBar" class="h-3 bg-yellow-400 rounded-full" style="width: 90%;"></div>
+    </div>
   </div>
 
-  <div class="w-full max-w-5xl bg-white rounded shadow p-4">
+  <div class="mt-8">
+    <h2 class="text-xl font-bold text-center mb-2">📘 История ходов</h2>
+    <table class="w-full text-sm bg-white rounded shadow overflow-hidden">
+      <thead class="bg-gray-200 font-bold">
+        <tr>
+          <th class="p-2">Ход</th>
+          <th class="p-2">Событие</th>
+          <th class="p-2">Свободные $</th>
+          <th class="p-2">Сбережения</th>
+          <th class="p-2">Инвестиции</th>
+          <th class="p-2">Здоровье</th>
+          <th class="p-2">Счастье</th>
+        </tr>
+      </thead>
+      <tbody id="historyTable" class="text-center"></tbody>
+    </table>
+  </div>
+
+  <div class="mt-8">
+    <h2 class="text-xl font-bold text-center mb-2">📈 Накопительный результат</h2>
     <canvas id="scoreChart"></canvas>
   </div>
 
 </div>
 
+<div id="end-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-6 text-center">
+  <h1 class="text-4xl font-bold mb-6">🏁 Игра завершена</h1>
+  <div class="bg-white p-6 rounded shadow w-full max-w-md space-y-4">
+    <p id="endReason"></p>
+    <p><strong>Итоговые сбережения:</strong> <span id="finalSavings">$0</span></p>
+    <p><strong>Итоговые инвестиции:</strong> <span id="finalInvestments">$0</span></p>
+    <p><strong>Здоровье:</strong> <span id="finalHealth">0%</span></p>
+    <p><strong>Счастье:</strong> <span id="finalHappiness">0%</span></p>
+    <p><strong>Пассивный доход в месяц:</strong> <span id="finalPassiveIncome">$0</span></p>
+    <p><strong>Твой результат:</strong> <span id="finalScore">0 баллов</span></p>
+    <p><strong>Твой титул:</strong> <span id="finalTitle">-</span></p>
+    <button onclick="location.reload()" class="mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700">Играть снова</button>
+  </div>
+</div>
+
 <script>
+// Основные переменные
 let turn = 0;
+let maxTurns = 0;
 let savings = 0;
 let investments = 0;
 let health = 100;
 let happiness = 90;
 let scores = [];
 
+// График результатов
 const ctx = document.getElementById('scoreChart').getContext('2d');
 const chart = new Chart(ctx, {
   type: 'line',
@@ -50,17 +117,23 @@ const chart = new Chart(ctx, {
   },
   options: {
     scales: {
-      y: {
-        beginAtZero: true
-      }
+      y: { beginAtZero: true }
     }
   }
 });
 
+function startGame(turns) {
+  maxTurns = turns;
+  document.getElementById('maxTurns').innerText = turns;
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  updateBars();
+}
+
 function runTurn() {
   turn++;
 
-  // случайное событие
+  // Обработать случайные события
   let event = "ничего";
   let expensePenalty = 0;
   let crisisLoss = 0;
@@ -78,7 +151,6 @@ function runTurn() {
     healthPenalty = health * 0.05;
   }
 
-  // экономика хода
   const income = 1000;
   const survival = 500;
   const comfort = 500;
@@ -93,7 +165,48 @@ function runTurn() {
   health = Math.max(0, Math.round(health));
   happiness = Math.max(0, Math.round(happiness));
 
-  // расчет баллов
+  updateSummary(event, freeMoney);
+
+  updateBars();
+  updateHistory(event, freeMoney);
+  updateChart();
+
+  if (health <= 0 || happiness <= 0 || turn >= maxTurns) {
+    finishGame("Игра завершена.");
+  }
+}
+
+function updateSummary(event, freeMoney) {
+  document.getElementById('turn').innerText = turn;
+  document.getElementById('event').innerText = event;
+  document.getElementById('free').innerText = `$${Math.round(freeMoney)}`;
+  document.getElementById('savings').innerText = `$${Math.round(savings)}`;
+  document.getElementById('investments').innerText = `$${Math.round(investments)}`;
+  document.getElementById('healthResult').innerText = `${Math.round(health)}%`;
+  document.getElementById('happinessResult').innerText = `${Math.round(happiness)}%`;
+}
+
+function updateBars() {
+  document.getElementById('healthBar').style.width = `${health}%`;
+  document.getElementById('happinessBar').style.width = `${happiness}%`;
+}
+
+function updateHistory(event, freeMoney) {
+  const table = document.getElementById("historyTable");
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td class="p-2">${turn}</td>
+    <td class="p-2">${event}</td>
+    <td class="p-2">$${Math.round(freeMoney)}</td>
+    <td class="p-2">$${Math.round(savings)}</td>
+    <td class="p-2">$${Math.round(investments)}</td>
+    <td class="p-2">${health}%</td>
+    <td class="p-2">${happiness}%</td>
+  `;
+  table.appendChild(row);
+}
+
+function updateChart() {
   let score = 0;
   score += Math.floor(savings / 1000);
   score += Math.floor(investments / 1000) * 2;
@@ -103,16 +216,31 @@ function runTurn() {
   if (passiveIncome > 1000) score += 30;
 
   scores.push(score);
-
-  // обновление текста
-  document.getElementById('turn').innerText = turn;
-  document.getElementById('event').innerText = event;
-  document.getElementById('score').innerText = score;
-
-  // обновление графика
   chart.data.labels.push(turn);
   chart.data.datasets[0].data.push(score);
   chart.update();
+}
+
+function finishGame(reason) {
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.remove('hidden');
+  document.getElementById('endReason').innerText = reason;
+
+  const passiveIncome = (investments * 0.05 + savings * 0.03) / 12;
+  let finalScore = scores[scores.length - 1];
+  let title = "Новичок";
+  if (finalScore >= 80) title = "Финансовый магнат";
+  else if (health > 90) title = "Здоровяк";
+  else if (happiness > 90) title = "Счастливчик";
+  else if (health < 30) title = "Выживший";
+
+  document.getElementById('finalSavings').innerText = `$${Math.round(savings)}`;
+  document.getElementById('finalInvestments').innerText = `$${Math.round(investments)}`;
+  document.getElementById('finalHealth').innerText = `${Math.round(health)}%`;
+  document.getElementById('finalHappiness').innerText = `${Math.round(happiness)}%`;
+  document.getElementById('finalPassiveIncome').innerText = `$${Math.round(passiveIncome)}`;
+  document.getElementById('finalScore').innerText = `${finalScore} баллов`;
+  document.getElementById('finalTitle').innerText = title;
 }
 </script>
 </body>
