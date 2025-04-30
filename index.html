@@ -168,12 +168,16 @@
 
       let income = 1000; if (extra==='да') income += 200;
       // событие
-      let event='ничего', penalty=0, crisis=0, sick=0;
-      const r=Math.random();
-      if(r<0.10){ event='мелкая трата –$50'; penalty=-50; }
-      else if(r<0.20){ event='кризис –6% инвестиций'; crisis=investments*0.06; }
-      else if(r<0.25){ event='болезнь –5% здоровья'; sick=health*0.05; }
-
+      let event='ничего', penalty=0, crisis=0;
+      const r = Math.random();
+      if(r<0.10){
+      event='мелкая трата –$50'; penalty=-50;}
+      else if(r<0.20){
+      event='кризис –6% инвестиций'; crisis=investments*0.06;}
+      else if(r<0.25){
+      event='болезнь –5% здоровья';
+      health = Math.max(0, Math.round(health * 0.95));}
+      
       // расчёты
       const totalSpend = survival+comfort+save+invest+healthSpend+edu;
       const free = income - totalSpend + penalty;
@@ -181,7 +185,6 @@
       const growth = Math.random()<=0.7 ? Math.random()*0.03 : Math.random()*-0.01;
       investments = (investments + invest - crisis)*(1+growth);
 
-      health -= sick;
       if(extra==='да') health -= health*0.05;
       if(survival<500) health -= ((500-survival)/500)*100;
       else health += 5;
