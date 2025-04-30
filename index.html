@@ -161,7 +161,11 @@
       document.getElementById('maxTurns').innerText = turns;
       document.getElementById('start-screen').classList.add('hidden');
       document.getElementById('game-screen').classList.remove('hidden');
-      
+    updateBars();
+    };
+      window.runTurn = () => {
+    turn++;
+        
       // читаем все поля
       const survival = +document.getElementById('survival').value;
       const comfort  = +document.getElementById('comfort').value;
@@ -177,21 +181,16 @@
       // обновляем дисплеи
       document.getElementById('incomeDisplay').innerText   = `$${Math.round(income)}`;
       document.getElementById('expensesDisplay').innerText = `$${Math.round(totalSpend)}`;
-
-      updateBars();};
       
       // событие
       let event='ничего', penalty=0, crisis=0;
       const r = Math.random();
-      if(r<0.15){
-      event='мелкая трата –$50'; penalty=-50;}
-      else if(r<0.25){
-      event='кризис –6% инвестиций'; crisis=investments*0.06;}
-      else if(r<0.40){
-      event='болезнь –5 здоровья'; health=Math.max(0,health-5);}
+      if(r<0.15){event='мелкая трата –$50'; penalty=-50;}
+      else if(r<0.25){event='кризис –6% инвестиций'; crisis=investments*0.06;}
+      else if(r<0.40){event='болезнь –5 здоровья'; health=Math.max(0,health-5);}
       
       // расчёты
-      const totalSpend = survival+comfort+save+invest+healthSpend+edu;
+  
       const free = income - totalSpend + penalty;
       savings += save + free;
       const growth = Math.random()<=0.7 ? Math.random()*0.03 : Math.random()*-0.01;
@@ -232,8 +231,8 @@
     };
 
     function updateBars(){
-      document.getElementById('healthBar').style.width = health+'%';
-      document.getElementById('happinessBar').style.width = happiness+'%';
+    document.getElementById('healthBar').style.width    = `${health}%`;
+    document.getElementById('happinessBar').style.width = `${happiness}%`;
     }
 
     function updateHistory(event, free){
