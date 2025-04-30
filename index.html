@@ -184,11 +184,13 @@
       const growth = Math.random()<=0.7 ? Math.random()*0.03 : Math.random()*-0.01;
       investments = (investments + invest - crisis)*(1+growth);
 
-      if(extra==='да') health -= 10;
-      if(survival<500) health -= ((500-survival)/500)*50;
-      else health += 5;
-      if(happiness>=90) health+=5;
-      health += (healthSpend/500)*50;
+      if (event !== 'болезнь –5 здоровья') {
+      if (extra === 'да')    health -= 5;
+      if (survival < 500)    health -= ((500 - survival)/500) * 100;
+      else                   health += 5;
+      if (happiness >= 90)   health += 5;
+      health += (healthSpend/500) * 50;}
+
       health = Math.round(Math.max(0, Math.min(100, health)));
 
       if(comfort<500) happiness -= ((500-comfort)/500)*10;
