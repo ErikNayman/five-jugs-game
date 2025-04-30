@@ -22,18 +22,46 @@
   <div id="game-screen" class="hidden p-6 space-y-6 max-w-5xl mx-auto">
 
     <!-- Ввод трат -->
-    <div class="grid grid-cols-2 gap-4">
-      <input id="survival"   type="number" placeholder="Траты на выживание" class="border p-2 rounded" value="500">
-      <input id="comfort"    type="number" placeholder="Траты на комфорт"    class="border p-2 rounded" value="500">
-      <input id="save"       type="number" placeholder="На сбережения"        class="border p-2 rounded" value="0">
-      <input id="invest"     type="number" placeholder="На инвестиции"         class="border p-2 rounded" value="0">
-      <input id="healthSpend"type="number" placeholder="На здоровье"          class="border p-2 rounded" value="0">
-      <input id="edu"        type="number" placeholder="На образование"        class="border p-2 rounded" value="0">
-      <select id="extra" class="border p-2 rounded col-span-2">
-        <option value="нет">Работать дополнительно? Нет</option>
-        <option value="да">Работать дополнительно? Да</option>
-      </select>
-    </div>
+  <div class="grid grid-cols-2 gap-6">
+    <div>
+    <label for="survival" class="block font-semibold mb-1">Выживание ($)</label>
+    <input id="survival" type="number" class="w-full border p-2 rounded" value="500">
+  </div>
+
+  <div>
+    <label for="comfort" class="block font-semibold mb-1">Комфорт ($)</label>
+    <input id="comfort" type="number" class="w-full border p-2 rounded" value="500">
+  </div>
+
+  <div>
+    <label for="save" class="block font-semibold mb-1">Сбережения ($)</label>
+    <input id="save" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div>
+    <label for="invest" class="block font-semibold mb-1">Инвестиции ($)</label>
+    <input id="invest" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div>
+    <label for="healthSpend" class="block font-semibold mb-1">На здоровье ($)</label>
+    <input id="healthSpend" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div>
+    <label for="edu" class="block font-semibold mb-1">Образование ($)</label>
+    <input id="edu" type="number" class="w-full border p-2 rounded" value="0">
+  </div>
+
+  <div class="col-span-2">
+    <label for="extra" class="block font-semibold mb-1">Дополнительная работа</label>
+    <select id="extra" class="w-full border p-2 rounded">
+      <option value="нет">Нет</option>
+      <option value="да">Да</option>
+    </select>
+  </div>
+
+</div>
 
     <!-- Кнопка хода -->
     <button onclick="runTurn()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">
