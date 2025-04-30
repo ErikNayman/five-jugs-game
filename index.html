@@ -148,8 +148,6 @@
     let health = 100, happiness = 90;
     let scores = [];
 
-    function updateIncomeExpenses() {
-      
     // инициализируем график
     const ctx = document.getElementById('scoreChart').getContext('2d');
     const chart = new Chart(ctx, {
@@ -157,7 +155,27 @@
       data: { labels: [], datasets: [{ label: 'Баллы', data: [], borderColor: 'rgb(75,192,192)', tension:0.3, fill:false }] },
       options: { scales: { y: { beginAtZero: true } } }
     });
-    }
+
+    
+// ─────────── Функция обновления Доходы/Расходы ───────────
+  function updateIncomeExpenses() {
+    const survival    = +document.getElementById('survival').value;
+    const comfort     = +document.getElementById('comfort').value;
+    const save        = +document.getElementById('save').value;
+    const invest      = +document.getElementById('invest').value;
+    const healthSpend = +document.getElementById('healthSpend').value;
+    const edu         = +document.getElementById('edu').value;
+    const extra       = document.getElementById('extra').value;
+
+    let income = 1000;
+    if (extra === 'да') income += 200;
+
+    const totalSpend = survival + comfort + save + invest + healthSpend + edu;
+
+    document.getElementById('incomeDisplay').innerText   = `$${income}`;
+    document.getElementById('expensesDisplay').innerText = `$${totalSpend}`;
+  }
+
     
     window.startGame = (turns) => {
       maxTurns = turns;
@@ -165,12 +183,12 @@
       document.getElementById('start-screen').classList.add('hidden');
       document.getElementById('game-screen').classList.remove('hidden');
       updateIncomeExpenses();
-    updateBars();
+      updateBars();
     };
     
       window.runTurn = () => {
     turn++;
-       updateIncomeExpenses();
+      updateIncomeExpenses();
         
       // читаем все поля
       const survival = +document.getElementById('survival').value;
@@ -187,7 +205,7 @@
       // обновляем дисплеи
       document.getElementById('incomeDisplay').innerText   = `$${income}`;
       document.getElementById('expensesDisplay').innerText = `$${totalSpend}`;
-      
+       
       // событие
       let event='ничего', penalty=0, crisis=0;
       const r = Math.random();
@@ -224,7 +242,6 @@
       document.getElementById('healthResult').innerText = `${health}%`;
       document.getElementById('happinessResult').innerText = `${happiness}%`;
 
-      updateIncomeExpenses();
       updateBars();
       updateHistory(event, free);
       updateChart();
