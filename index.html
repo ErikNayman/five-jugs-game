@@ -1,256 +1,178 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.5">
-  <style type="text/css">
-    span.s1 {font-kerning: none}
-  </style>
+  <meta charset="UTF-8">
+  <title>5 Кувшинов — Полная игра</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1">&lt;!DOCTYPE html&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1">&lt;html lang="ru"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1">&lt;head&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;title&gt;5 Кувшинов — Финальная версия&lt;/title&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1">&lt;/head&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1">&lt;body class="bg-gray-100"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;!-- ========== СТАРТОВЫЙ ЭКРАН ========== --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h1 class="text-4xl font-bold mb-6 text-center"&gt;🏺 5 Кувшинов&lt;/h1&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4 text-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2 class="text-xl font-semibold mb-2"&gt;Выбери длительность игры:&lt;/h2&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button onclick="startGame(24)" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"&gt;24 месяца&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button onclick="startGame(36)" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"&gt;36 месяцев&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;!-- ========== ИГРОВОЙ ЭКРАН ========== --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="game-screen" class="hidden p-6 space-y-6 max-w-5xl mx-auto"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- Ввод трат --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="grid grid-cols-2 gap-4"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="survival" <span class="Apple-converted-space">  </span>type="number" placeholder="Траты на выживание" class="border p-2 rounded" value="500"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="comfort"<span class="Apple-converted-space">    </span>type="number" placeholder="Траты на комфорт"<span class="Apple-converted-space">    </span>class="border p-2 rounded" value="500"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="save" <span class="Apple-converted-space">      </span>type="number" placeholder="На сбережения"<span class="Apple-converted-space">        </span>class="border p-2 rounded" value="0"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="invest" <span class="Apple-converted-space">    </span>type="number" placeholder="На инвестиции" <span class="Apple-converted-space">        </span>class="border p-2 rounded" value="0"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="healthSpend"type="number" placeholder="На здоровье"<span class="Apple-converted-space">          </span>class="border p-2 rounded" value="0"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="edu"<span class="Apple-converted-space">        </span>type="number" placeholder="На образование"<span class="Apple-converted-space">        </span>class="border p-2 rounded" value="0"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;select id="extra" class="border p-2 rounded col-span-2"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;option value="нет"&gt;Работать дополнительно? Нет&lt;/option&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;option value="да"&gt;Работать дополнительно? Да&lt;/option&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/select&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- Кнопка хода --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button onclick="runTurn()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>Провести ход</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- Статистика --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="text-center space-y-2"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;Ход: &lt;span id="turn"&gt;0&lt;/span&gt; / &lt;span id="maxTurns"&gt;0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;Событие: &lt;span id="event"&gt;-&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;Свободные деньги: &lt;span id="free"&gt;$0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;Сбережения: &lt;span id="savings"&gt;$0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;Инвестиции: &lt;span id="investments"&gt;$0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;Здоровье: &lt;span id="healthResult"&gt;100%&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="w-full h-3 bg-gray-300 rounded-full"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="healthBar" class="h-3 bg-green-500 rounded-full" style="width:100%"&gt;&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p class="mt-2"&gt;Счастье: &lt;span id="happinessResult"&gt;90%&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="w-full h-3 bg-gray-300 rounded-full"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="happinessBar" class="h-3 bg-yellow-400 rounded-full" style="width:90%"&gt;&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- История ходов --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="mt-8"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2 class="text-xl font-bold text-center mb-2"&gt;📘 История ходов&lt;/h2&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;table class="w-full text-sm bg-white rounded shadow overflow-hidden"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;thead class="bg-gray-200 font-bold"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">          </span>&lt;tr&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;th class="p-2"&gt;Ход&lt;/th&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;th class="p-2"&gt;Событие&lt;/th&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;th class="p-2"&gt;Свободные $&lt;/th&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;th class="p-2"&gt;Сбережения&lt;/th&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;th class="p-2"&gt;Инвестиции&lt;/th&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;th class="p-2"&gt;Здоровье&lt;/th&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;th class="p-2"&gt;Счастье&lt;/th&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/tr&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/thead&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;tbody id="historyTable" class="text-center"&gt;&lt;/tbody&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/table&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- График баллов --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="mt-8"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2 class="text-xl font-bold text-center mb-2"&gt;📈 Накопительный результат&lt;/h2&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;canvas id="scoreChart"&gt;&lt;/canvas&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;!-- ========== ЭКРАН ЗАВЕРШЕНИЯ ========== --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="end-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-6 text-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h1 class="text-4xl font-bold mb-6"&gt;🏁 Игра завершена&lt;/h1&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="bg-white p-6 rounded shadow w-full max-w-md space-y-4"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p id="endReason"&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;Сбережения:&lt;/strong&gt; &lt;span id="finalSavings"&gt;$0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;Инвестиции:&lt;/strong&gt; &lt;span id="finalInvestments"&gt;$0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;Здоровье:&lt;/strong&gt; &lt;span id="finalHealth"&gt;0%&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;Счастье:&lt;/strong&gt; &lt;span id="finalHappiness"&gt;0%&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;Пассивный доход:&lt;/strong&gt; &lt;span id="finalPassiveIncome"&gt;$0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;Баллы:&lt;/strong&gt; &lt;span id="finalScore"&gt;0&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;&lt;strong&gt;Титул:&lt;/strong&gt; &lt;span id="finalTitle"&gt;-&lt;/span&gt;&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button onclick="location.reload()" class="mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>Играть снова</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;!-- ========== СКРИПТ ========== --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>document.addEventListener('DOMContentLoaded', () =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>let turn = 0, maxTurns = 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>let savings = 0, investments = 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>let health = 100, happiness = 90;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>let scores = [];</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>// инициализируем график</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>const ctx = document.getElementById('scoreChart').getContext('2d');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>const chart = new Chart(ctx, {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>type: 'line',</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>data: { labels: [], datasets: [{ label: 'Баллы', data: [], borderColor: 'rgb(75,192,192)', tension:0.3, fill:false }] },</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>options: { scales: { y: { beginAtZero: true } } }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>});</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>window.startGame = (turns) =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>maxTurns = turns;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('maxTurns').innerText = turns;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('start-screen').classList.add('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('game-screen').classList.remove('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>updateBars();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>};</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>window.runTurn = () =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>turn++;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>// читаем все поля</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const survival = +document.getElementById('survival').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const comfort<span class="Apple-converted-space">  </span>= +document.getElementById('comfort').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const save <span class="Apple-converted-space">    </span>= +document.getElementById('save').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const invest <span class="Apple-converted-space">  </span>= +document.getElementById('invest').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const healthSpend = +document.getElementById('healthSpend').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const edu<span class="Apple-converted-space">      </span>= +document.getElementById('edu').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const extra<span class="Apple-converted-space">    </span>= document.getElementById('extra').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>let income = 1000; if (extra==='да') income += 200;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>// событие</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>let event='ничего', penalty=0, crisis=0, sick=0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const r=Math.random();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(r&lt;0.10){ event='мелкая трата –$50'; penalty=-50; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>else if(r&lt;0.20){ event='кризис –6% инвестиций'; crisis=investments*0.06; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>else if(r&lt;0.25){ event='болезнь –5% здоровья'; sick=health*0.05; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>// расчёты</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const totalSpend = survival+comfort+save+invest+healthSpend+edu;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const free = income - totalSpend + penalty;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>savings += save + free;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const growth = Math.random()&lt;=0.7 ? Math.random()*0.03 : Math.random()*-0.01;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>investments = (investments + invest - crisis)*(1+growth);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>health -= sick;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(extra==='да') health -= health*0.05;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(survival&lt;500) health -= ((500-survival)/500)*100;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>else health += 5;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(happiness&gt;=90) health+=5;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>health += (healthSpend/500)*50;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>health = Math.round(Math.max(0, Math.min(100, health)));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(comfort&lt;500) happiness -= ((500-comfort)/500)*10;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(extra==='да') happiness -= 5;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>happiness = Math.round(Math.max(0, happiness));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>// обновляем интерфейс</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('turn').innerText = turn;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('event').innerText = event;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('free').innerText = `$${Math.round(free)}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('savings').innerText = `$${Math.round(savings)}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('investments').innerText = `$${Math.round(investments)}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('healthResult').innerText = `${health}%`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('happinessResult').innerText = `${happiness}%`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>updateBars();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>updateHistory(event, free);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>updateChart();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(health&lt;=0 || happiness&lt;=0 || turn&gt;=maxTurns){</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>let reason = health&lt;=0 ? 'Ты потерял здоровье.'<span class="Apple-converted-space"> </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>: happiness&lt;=0 ? 'Ты потерял счастье.'<span class="Apple-converted-space"> </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>: 'Ходы закончились.';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>finishGame(reason);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>};</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>function updateBars(){</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('healthBar').style.width = health+'%';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('happinessBar').style.width = happiness+'%';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>function updateHistory(event, free){</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const row = document.createElement('tr');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>row.innerHTML = `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;td class="p-2"&gt;${turn}&lt;/td&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;td class="p-2"&gt;${event}&lt;/td&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;td class="p-2"&gt;$${Math.round(free)}&lt;/td&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;td class="p-2"&gt;$${Math.round(savings)}&lt;/td&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;td class="p-2"&gt;$${Math.round(investments)}&lt;/td&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;td class="p-2"&gt;${health}%&lt;/td&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;td class="p-2"&gt;${happiness}%&lt;/td&gt;`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('historyTable').appendChild(row);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>function updateChart(){</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>let score = Math.floor(savings/1000) + Math.floor(investments/1000)*2;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(health&gt;70) score+=20;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(happiness&gt;70) score+=20;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const passive=(investments*0.05 + savings*0.03)/12;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(passive&gt;1000) score+=30;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>scores.push(score);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>chart.data.labels.push(turn);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>chart.data.datasets[0].data.push(score);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>chart.update();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>function finishGame(reason){</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('game-screen').classList.add('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const end = document.getElementById('end-screen');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>end.classList.remove('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('endReason').innerText = reason;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('finalSavings').innerText = `$${Math.round(savings)}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('finalInvestments').innerText = `$${Math.round(investments)}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('finalHealth').innerText = `${health}%`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('finalHappiness').innerText = `${happiness}%`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('finalPassiveIncome').innerText = `$${Math.round((investments*0.05+savings*0.03)/12)}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>const finalScore = scores[scores.length-1];</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('finalScore').innerText = `${finalScore} баллов`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>let title = 'Новичок';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>if(finalScore&gt;=80) title='Финансовый магнат';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>else if(health&gt;90) title='Здоровяк';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>else if(happiness&gt;90) title='Счастливчик';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>else if(health&lt;30) title='Выживший';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('finalTitle').innerText = title;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>});</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1">&lt;/body&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000"><span class="s1">&lt;/html&gt;</span></h1>
+<body class="bg-gray-100">
+
+<div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
+  <h1 class="text-4xl font-bold mb-6 text-center">🏺 5 Кувшинов — Старт</h1>
+  <div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4 text-center">
+    <h2 class="text-xl font-semibold mb-2">Выбери длительность игры:</h2>
+    <button onclick="startGame(24)" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">24 месяца</button>
+    <button onclick="startGame(36)" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">36 месяцев</button>
+  </div>
+</div>
+
+<div id="game-screen" class="hidden p-6 space-y-4 max-w-2xl mx-auto">
+  <div class="grid grid-cols-2 gap-4">
+    <input id="survival" type="number" placeholder="Траты на выживание ($)" class="border p-2 rounded" value="500">
+    <input id="comfort" type="number" placeholder="Траты на комфорт ($)" class="border p-2 rounded" value="500">
+    <input id="save" type="number" placeholder="На сбережения ($)" class="border p-2 rounded" value="0">
+    <input id="invest" type="number" placeholder="На инвестиции ($)" class="border p-2 rounded" value="0">
+    <input id="healthSpend" type="number" placeholder="На здоровье ($)" class="border p-2 rounded" value="0">
+    <input id="edu" type="number" placeholder="На образование ($)" class="border p-2 rounded" value="0">
+    <select id="extra" class="border p-2 rounded col-span-2">
+      <option value="нет">Работать дополнительно? Нет</option>
+      <option value="да">Работать дополнительно? Да</option>
+    </select>
+  </div>
+
+  <button onclick="runTurn()" class="w-full mt-4 bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">Провести ход</button>
+
+  <div class="text-center space-y-2">
+    <p>Ход: <span id="turn">0</span> / <span id="maxTurns">0</span></p>
+    <p>Событие: <span id="event">-</span></p>
+    <p>Свободные деньги: <span id="free">$0</span></p>
+    <p>Сбережения: <span id="savings">$0</span></p>
+    <p>Инвестиции: <span id="investments">$0</span></p>
+    <p>Здоровье: <span id="healthResult">100%</span></p>
+    <p>Счастье: <span id="happinessResult">90%</span></p>
+  </div>
+</div>
+
+<div id="end-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-6 text-center">
+  <h1 class="text-4xl font-bold mb-6">🏆 Игра окончена!</h1>
+  <div class="bg-white p-6 rounded shadow w-full max-w-md space-y-4">
+    <p><strong>Итоговые сбережения:</strong> <span id="finalSavings">$0</span></p>
+    <p><strong>Итоговые инвестиции:</strong> <span id="finalInvestments">$0</span></p>
+    <p><strong>Здоровье:</strong> <span id="finalHealth">0%</span></p>
+    <p><strong>Счастье:</strong> <span id="finalHappiness">0%</span></p>
+    <p><strong>Пассивный доход в месяц:</strong> <span id="finalPassiveIncome">$0</span></p>
+    <p><strong>Твой результат:</strong> <span id="finalScore">0 баллов</span></p>
+    <p><strong>Твой титул:</strong> <span id="finalTitle">-</span></p>
+    <button onclick="location.reload()" class="mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700">Играть снова</button>
+  </div>
+</div>
+
+<script>
+let savings_total = 0;
+let investments_total = 0;
+let health = 100;
+let happiness = 90;
+const income_base = 1000;
+const base_survival = 500;
+const base_comfort = 500;
+let maxTurns = 0;
+let currentTurn = 0;
+
+function startGame(turns) {
+  maxTurns = turns;
+  document.getElementById('maxTurns').innerText = turns;
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+}
+
+function runTurn() {
+  currentTurn++;
+  if (currentTurn > maxTurns) {
+    finishGame();
+    return;
+  }
+
+  document.getElementById('turn').innerText = currentTurn;
+
+  const survival = parseFloat(document.getElementById('survival').value);
+  const comfort = parseFloat(document.getElementById('comfort').value);
+  const save = parseFloat(document.getElementById('save').value);
+  const invest = parseFloat(document.getElementById('invest').value);
+  const healthSpend = parseFloat(document.getElementById('healthSpend').value);
+  const edu = parseFloat(document.getElementById('edu').value);
+  const extra = document.getElementById('extra').value;
+
+  let income = income_base;
+  if (extra === "да") income += 200;
+
+  let event = "ничего";
+  let random = Math.random();
+  let crisisLoss = 0;
+  let expensePenalty = 0;
+  let healthPenalty = 0;
+
+  if (random < 0.10) {
+    event = "мелкая трата –$50";
+    expensePenalty = -50;
+  } else if (random < 0.20) {
+    event = "мини-кризис: инвестиции –6%";
+    crisisLoss = investments_total * 0.06;
+  } else if (random < 0.25) {
+    event = "болезнь –10% здоровья";
+    healthPenalty = 0.10 * base_survival;
+  }
+
+  const totalSpent = survival + comfort + save + invest + healthSpend + edu;
+  const free = income - totalSpent;
+
+  savings_total += save + free + expensePenalty;
+  const growth = Math.random() <= 0.7 ? Math.random()*0.03 : Math.random()*-0.01;
+  investments_total = (investments_total + invest - crisisLoss) * (1 + growth);
+
+  if (comfort < base_comfort) {
+    happiness -= ((base_comfort - comfort) / base_comfort) * 10;
+  }
+  if (extra === "да") {
+    happiness -= 0.01 * base_survival;
+  }
+  happiness = Math.max(0, happiness);
+
+  if (survival < base_survival) {
+    health -= ((base_survival - survival) / base_survival) * 100;
+  }
+  health += (healthSpend / base_survival) * 50;
+  if (extra === "да") {
+    health -= 0.02 * base_survival;
+  }
+  health -= healthPenalty;
+  if (survival >= base_survival) health += base_survival / 100;
+  if (happiness >= 90) health += base_survival / 100;
+  health = Math.max(0, Math.min(100, health));
+
+  document.getElementById('event').innerText = event;
+  document.getElementById('free').innerText = `$${Math.round(free)}`;
+  document.getElementById('savings').innerText = `$${Math.round(savings_total)}`;
+  document.getElementById('investments').innerText = `$${Math.round(investments_total)}`;
+  document.getElementById('healthResult').innerText = `${Math.round(health)}%`;
+  document.getElementById('happinessResult').innerText = `${Math.round(happiness)}%`;
+}
+
+function finishGame() {
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.remove('hidden');
+
+  const passiveIncome = (investments_total*0.05 + savings_total*0.03) / 12;
+  let score = 0;
+  score += Math.floor(savings_total / 1000);
+  score += Math.floor(investments_total / 1000) * 2;
+  if (health > 70) score += 20;
+  if (happiness > 70) score += 20;
+  if (passiveIncome > 1000) score += 30;
+
+  let title = "Новичок";
+  if (score >= 80) title = "Финансовый магнат";
+  else if (health > 90) title = "Здоровяк";
+  else if (happiness > 90) title = "Счастливчик";
+  else if (health < 30) title = "Выживший";
+
+  document.getElementById('finalSavings').innerText = `$${Math.round(savings_total)}`;
+  document.getElementById('finalInvestments').innerText = `$${Math.round(investments_total)}`;
+  document.getElementById('finalHealth').innerText = `${Math.round(health)}%`;
+  document.getElementById('finalHappiness').innerText = `${Math.round(happiness)}%`;
+  document.getElementById('finalPassiveIncome').innerText = `$${Math.round(passiveIncome)}`;
+  document.getElementById('finalScore').innerText = `${score} баллов`;
+  document.getElementById('finalTitle').innerText = title;
+}
+</script>
 </body>
 </html>
