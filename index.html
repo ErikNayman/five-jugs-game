@@ -161,14 +161,6 @@
       document.getElementById('maxTurns').innerText = turns;
       document.getElementById('start-screen').classList.add('hidden');
       document.getElementById('game-screen').classList.remove('hidden');
-      updateBars();
-    };
-
-    window.startGame = (turns) => {
-      maxTurns = turns;
-      document.getElementById('maxTurns').innerText = turns;
-      document.getElementById('start-screen').classList.add('hidden');
-      document.getElementById('game-screen').classList.remove('hidden');
       
       // читаем все поля
       const survival = +document.getElementById('survival').value;
