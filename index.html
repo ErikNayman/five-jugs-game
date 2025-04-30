@@ -166,6 +166,10 @@
       const edu      = +document.getElementById('edu').value;
       const extra    = document.getElementById('extra').value;
 
+      let healthPenaltyFromExtra = 0;
+      if (extra === 'да') {healthPenaltyFromExtra = 5;
+      health = Math.max(0, health - healthPenaltyFromExtra);}
+    
       let income = 1000; if (extra==='да') income += 200;
       // событие
       let event='ничего', penalty=0, crisis=0;
@@ -185,7 +189,6 @@
       investments = (investments + invest - crisis)*(1+growth);
 
       if (event !== 'болезнь –5 здоровья') {
-      if (extra === 'да')    health -= 5;
       if (survival < 500)    health -= ((500 - survival)/500) * 100;
       else                   health += 5;
       if (happiness >= 90)   health += 5;
