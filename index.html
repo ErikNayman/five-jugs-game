@@ -176,6 +176,16 @@
       const extra    = document.getElementById('extra').value;
     
       let income = 1000; if (extra==='да') income += 200;
+
+      // считаем доход и расходы
+      let income = 1000;
+      if (extra === 'да') income += 200;
+      const totalSpend = survival + comfort + save + invest + healthSpend + edu;
+
+      // обновляем дисплеи
+      document.getElementById('incomeDisplay').innerText   = `$${Math.round(income)}`;
+      document.getElementById('expensesDisplay').innerText = `$${Math.round(totalSpend)}`;
+      
       // событие
       let event='ничего', penalty=0, crisis=0;
       const r = Math.random();
