@@ -164,8 +164,12 @@
       updateBars();
     };
 
-    window.runTurn = () => {
-      turn++;
+    window.startGame = (turns) => {
+      maxTurns = turns;
+      document.getElementById('maxTurns').innerText = turns;
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      
       // читаем все поля
       const survival = +document.getElementById('survival').value;
       const comfort  = +document.getElementById('comfort').value;
@@ -181,6 +185,8 @@
       // обновляем дисплеи
       document.getElementById('incomeDisplay').innerText   = `$${Math.round(income)}`;
       document.getElementById('expensesDisplay').innerText = `$${Math.round(totalSpend)}`;
+
+      updateBars();};
       
       // событие
       let event='ничего', penalty=0, crisis=0;
