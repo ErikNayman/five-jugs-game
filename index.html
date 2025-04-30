@@ -162,7 +162,7 @@
       document.getElementById('start-screen').classList.add('hidden');
       document.getElementById('game-screen').classList.remove('hidden');
     updateBars();
-    };
+    
       window.runTurn = () => {
     turn++;
         
@@ -221,6 +221,7 @@
       updateBars();
       updateHistory(event, free);
       updateChart();
+};
 
       if(health<=0 || happiness<=0 || turn>=maxTurns){
         let reason = health<=0 ? 'Ты потерял здоровье.' 
