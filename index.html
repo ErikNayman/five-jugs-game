@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>5 Кувшинов — Финальная версия</title>
+  <title>5 Кувшинов</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -165,10 +165,6 @@
       const healthSpend = +document.getElementById('healthSpend').value;
       const edu      = +document.getElementById('edu').value;
       const extra    = document.getElementById('extra').value;
-
-      let healthPenaltyFromExtra = 0;
-      if (extra === 'да') {healthPenaltyFromExtra = 5;
-      health = Math.max(0, health - healthPenaltyFromExtra);}
     
       let income = 1000; if (extra==='да') income += 200;
       // событие
@@ -196,6 +192,7 @@
 
       health = Math.round(Math.max(0, Math.min(100, health)));
 
+      if(extra==='да') {health = Math.max(0, health - 5);}
       if(comfort<500) happiness -= ((500-comfort)/500)*10;
       if(extra==='да') happiness -= 5;
       happiness = Math.round(Math.max(0, happiness));
