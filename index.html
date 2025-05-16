@@ -1,308 +1,207 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>5 Кувшинов</title>
+  <meta charset="UTF-8" />
+  <title>Option RUO Calculator – Auto‑Fill</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* simple dark chart background */
+    canvas{background:#f8fafc;border-radius:12px}
+  </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8 space-y-6">
+    <h1 class="text-2xl font-semibold text-center">Option RUO Calculator — Auto‑Fill</h1>
 
-  <!-- ========== СТАРТОВЫЙ ЭКРАН ========== -->
-  <div id="start-screen" class="min-h-screen flex flex-col items-center justify-center p-6">
-    <h1 class="text-4xl font-bold mb-6 text-center">🏺 5 Кувшинов</h1>
-    <div class="bg-white p-6 rounded shadow w-full max-w-sm space-y-4 text-center">
-      <h2 class="text-xl font-semibold mb-2">Выбери длительность игры:</h2>
-      <button onclick="startGame(24)" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">24 месяца</button>
-      <button onclick="startGame(36)" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">36 месяцев</button>
-    </div>
-  </div>
+    <!-- ╔═══ AUTO‑FILL SECTION ═══╗ -->
+    <div class="grid grid-cols-2 gap-4">
+      <label class="flex flex-col col-span-2">
+        <span class="text-sm">Ticker</span>
+        <input id="ticker" placeholder="AAPL" class="border rounded-lg px-3 py-2 uppercase tracking-wide">
+      </label>
 
-  <!-- ========== ИГРОВОЙ ЭКРАН ========== -->
-  <div id="game-screen" class="hidden p-6 space-y-6 max-w-5xl mx-auto">
+      <label class="flex flex-col">
+        <span class="text-sm">Expiration date</span>
+        <select id="expSelect" class="border rounded-lg px-3 py-2"></select>
+      </label>
 
-    <!-- Ввод трат -->
-  <div class="grid grid-cols-2 gap-6">
-    <div>
-    <label class="block font-semibold mb-1">Доход ($)</label>
-    <p id="incomeDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
-  </div>
-  <div>
-    <label class="block font-semibold mb-1">Расходы ($)</label>
-    <p id="expensesDisplay" class="w-full border p-2 rounded bg-gray-50">$0</p>
-  </div>
-  </div>
-    <div>
-    <label for="survival" class="block font-semibold mb-1">Выживание ($)</label>
-    <input id="survival" type="number" class="w-full border p-2 rounded" value="500">
-  </div>
+      <label class="flex flex-col">
+        <span class="text-sm">Strike</span>
+        <select id="strikeSelect" class="border rounded-lg px-3 py-2"></select>
+      </label>
 
-  <div>
-    <label for="comfort" class="block font-semibold mb-1">Комфорт ($)</label>
-    <input id="comfort" type="number" class="w-full border p-2 rounded" value="500">
-  </div>
+      <label class="flex flex-col">
+        <span class="text-sm">Days to expiration</span>
+        <input id="days" readonly class="border rounded-lg px-3 py-2 bg-slate-100">
+      </label>
 
-  <div>
-    <label for="save" class="block font-semibold mb-1">Сбережения ($)</label>
-    <input id="save" type="number" class="w-full border p-2 rounded" value="0">
-  </div>
+      <label class="flex flex-col">
+        <span class="text-sm">Volatility σ (annual, IV)</span>
+        <input id="sigma" readonly class="border rounded-lg px-3 py-2 bg-slate-100">
+      </label>
 
-  <div>
-    <label for="invest" class="block font-semibold mb-1">Инвестиции ($)</label>
-    <input id="invest" type="number" class="w-full border p-2 rounded" value="0">
-  </div>
+      <label class="flex flex-col">
+        <span class="text-sm">Risk‑free rate r (auto FRED)</span>
+        <input id="r" class="border rounded-lg px-3 py-2 bg-slate-100">
+      </label>
 
-  <div>
-    <label for="healthSpend" class="block font-semibold mb-1">На здоровье ($)</label>
-    <input id="healthSpend" type="number" class="w-full border p-2 rounded" value="0">
-  </div>
+      <label class="flex flex-col">
+        <span class="text-sm">Dividend yield q (auto)</span>
+        <input id="q" class="border rounded-lg px-3 py-2 bg-slate-100">
+      </label>
 
-  <div>
-    <label for="edu" class="block font-semibold mb-1">Образование ($)</label>
-    <input id="edu" type="number" class="w-full border p-2 rounded" value="0">
-  </div>
-
-  <div class="col-span-2">
-    <label for="extra" class="block font-semibold mb-1">Дополнительная работа</label>
-    <select id="extra" class="w-full border p-2 rounded">
-      <option value="нет">Нет</option>
-      <option value="да">Да</option>
-    </select>
-  </div>
-
-</div>
-
-    <!-- Кнопка хода -->
-    <button onclick="runTurn()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">
-      Провести ход
-    </button>
-
-    <!-- Статистика -->
-    <div class="text-center space-y-2">
-      <p>Ход: <span id="turn">0</span> / <span id="maxTurns">0</span></p>
-      <p>Событие: <span id="event">-</span></p>
-      <p>Свободные деньги: <span id="free">$0</span></p>
-      <p>Сбережения: <span id="savings">$0</span></p>
-      <p>Инвестиции: <span id="investments">$0</span></p>
-
-      <p>Здоровье: <span id="healthResult">100%</span></p>
-      <div class="w-full h-3 bg-gray-300 rounded-full">
-        <div id="healthBar" class="h-3 bg-green-500 rounded-full" style="width:100%"></div>
-      </div>
-
-      <p class="mt-2">Счастье: <span id="happinessResult">90%</span></p>
-      <div class="w-full h-3 bg-gray-300 rounded-full">
-        <div id="happinessBar" class="h-3 bg-yellow-400 rounded-full" style="width:90%"></div>
-      </div>
+      <!-- manual fine‑tune fields -->
+      <label class="flex flex-col">
+        <span class="text-sm">Binomial price steps</span>
+        <input id="priceSteps" type="number" value="200" step="10" class="border rounded-lg px-3 py-2">
+      </label>
+      <label class="flex flex-col">
+        <span class="text-sm">RUO simulations N</span>
+        <input id="N" type="number" value="35000" step="1000" class="border rounded-lg px-3 py-2">
+      </label>
+      <label class="flex flex-col">
+        <span class="text-sm">RUO steps / year</span>
+        <input id="steps" type="number" value="252" step="1" class="border rounded-lg px-3 py-2">
+      </label>
     </div>
 
-    <!-- История ходов -->
-    <div class="mt-8">
-      <h2 class="text-xl font-bold text-center mb-2">📘 История ходов</h2>
-      <table class="w-full text-sm bg-white rounded shadow overflow-hidden">
-        <thead class="bg-gray-200 font-bold">
-          <tr>
-            <th class="p-2">Ход</th>
-            <th class="p-2">Событие</th>
-            <th class="p-2">Свободные $</th>
-            <th class="p-2">Сбережения</th>
-            <th class="p-2">Инвестиции</th>
-            <th class="p-2">Здоровье</th>
-            <th class="p-2">Счастье</th>
-          </tr>
-        </thead>
-        <tbody id="historyTable" class="text-center"></tbody>
-      </table>
-    </div>
+    <!-- IV surface button -->
+    <button id="plotBtn" class="w-full bg-slate-600 hover:bg-slate-700 text-white rounded-lg py-2.5 font-medium">Show IV Skew</button>
+    <canvas id="ivChart" height="250" class="hidden"></canvas>
 
-    <!-- График баллов -->
-    <div class="mt-8">
-      <h2 class="text-xl font-bold text-center mb-2">📈 Накопительный результат</h2>
-      <canvas id="scoreChart"></canvas>
-    </div>
+    <!-- calculate -->
+    <button id="calcBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 font-semibold">Calculate</button>
+    <div id="output" class="text-lg font-mono whitespace-pre-wrap"></div>
   </div>
 
-  <!-- ========== ЭКРАН ЗАВЕРШЕНИЯ ========== -->
-  <div id="end-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-6 text-center">
-    <h1 class="text-4xl font-bold mb-6">🏁 Игра завершена</h1>
-    <div class="bg-white p-6 rounded shadow w-full max-w-md space-y-4">
-      <p id="endReason"></p>
-      <p><strong>Сбережения:</strong> <span id="finalSavings">$0</span></p>
-      <p><strong>Инвестиции:</strong> <span id="finalInvestments">$0</span></p>
-      <p><strong>Здоровье:</strong> <span id="finalHealth">0%</span></p>
-      <p><strong>Счастье:</strong> <span id="finalHappiness">0%</span></p>
-      <p><strong>Пассивный доход:</strong> <span id="finalPassiveIncome">$0</span></p>
-      <p><strong>Баллы:</strong> <span id="finalScore">0</span></p>
-      <p><strong>Титул:</strong> <span id="finalTitle">-</span></p>
-      <button onclick="location.reload()" class="mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700">
-        Играть снова
-      </button>
-    </div>
-  </div>
+<script>
+const API_KEY = 'YOUR_RAPIDAPI_KEY'; // 🔑 insert your RapidAPI key (Yahoo Finance) here
+const FRED_KEY = 'YOUR_FRED_KEY';    // optional: FRED api key for risk‑free auto
+const YH_HOST  = 'yh-finance.p.rapidapi.com';
 
-  <!-- ========== СКРИПТ ========== -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    let turn = 0, maxTurns = 0;
-    let savings = 0, investments = 0;
-    let health = 100, happiness = 90;
-    let scores = [];
+const hdrs = {'X-RapidAPI-Key':API_KEY,'X-RapidAPI-Host':YH_HOST};
 
-    // инициализируем график
-    const ctx = document.getElementById('scoreChart').getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'line',
-      data: { labels: [], datasets: [{ label: 'Баллы', data: [], borderColor: 'rgb(75,192,192)', tension:0.3, fill:false }] },
-      options: { scales: { y: { beginAtZero: true } } }
-    });
+/*────────── helpers ──────────*/
+const toDateStr = ts=>new Date(ts*1000).toISOString().slice(0,10);
+const todaySec = ()=>Date.now()/1000;
 
-    
-// ─────────── Функция обновления Доходы/Расходы ───────────
-  function updateIncomeExpenses() {
-    const survival    = +document.getElementById('survival').value;
-    const comfort     = +document.getElementById('comfort').value;
-    const save        = +document.getElementById('save').value;
-    const invest      = +document.getElementById('invest').value;
-    const healthSpend = +document.getElementById('healthSpend').value;
-    const edu         = +document.getElementById('edu').value;
-    const extra       = document.getElementById('extra').value;
+/*────────── ticker change → expirations list ──────────*/
+async function fetchExpirations(tkr){
+  const res = await fetch(`https://${YH_HOST}/options/v2/get-options?symbol=${tkr}`,{headers:hdrs});
+  const js  = await res.json();
+  return js.optionExpirationDates||[];
+}
 
-    let income = 1000;
-    if (extra === 'да') income += 200;
+/*────────── expiration change → strikes + IV, days ──────────*/
+async function fetchChain(tkr,ts){
+  const res = await fetch(`https://${YH_HOST}/options/v2/get-options?symbol=${tkr}&date=${ts}`,{headers:hdrs});
+  const js  = await res.json();
+  return js.options[0]; // {calls:[], puts:[]}
+}
 
-    const totalSpend = survival + comfort + save + invest + healthSpend + edu;
+/*────────── quote for dividend yield ──────────*/
+async function fetchQuote(tkr){
+  const res = await fetch(`https://${YH_HOST}/stock/v2/get-summary?symbol=${tkr}`,{headers:hdrs});
+  const js  = await res.json();
+  return js.summaryDetail||{};
+}
 
-    document.getElementById('incomeDisplay').innerText   = `$${income}`;
-    document.getElementById('expensesDisplay').innerText = `$${totalSpend}`;
-  }
+/*────────── risk‑free from FRED (DGS3MO) ──────────*/
+async function fetchRiskFree(){
+  if(!FRED_KEY) return null;
+  const url = `https://api.stlouisfed.org/fred/series/observations?series_id=DGS3MO&api_key=${FRED_KEY}&file_type=json&limit=1&sort_order=desc`;
+  const res = await fetch(url);
+  const js  = await res.json();
+  const obs = js.observations&&js.observations[0];
+  return obs?parseFloat(obs.value)/100: null;
+}
 
-    
-    window.startGame = (turns) => {
-      maxTurns = turns;
-      document.getElementById('maxTurns').innerText = turns;
-      document.getElementById('start-screen').classList.add('hidden');
-      document.getElementById('game-screen').classList.remove('hidden');
-      updateIncomeExpenses();
-      updateBars();
-    };
-    
-      window.runTurn = () => {
-    turn++;
-      updateIncomeExpenses();
-        
-      // читаем все поля
-      const survival = +document.getElementById('survival').value;
-      const comfort  = +document.getElementById('comfort').value;
-      const save     = +document.getElementById('save').value;
-      const invest   = +document.getElementById('invest').value;
-      const healthSpend = +document.getElementById('healthSpend').value;
-      const edu      = +document.getElementById('edu').value;
-      const extra    = document.getElementById('extra').value;
-    
-      let income = 1000; if (extra==='да') income += 200;
-      const totalSpend = survival + comfort + save + invest + healthSpend + edu;
+/*────────── populate expirations on ticker input ──────────*/
+const tickerEl = document.getElementById('ticker');
+const expSel   = document.getElementById('expSelect');
+const strikeSel= document.getElementById('strikeSelect');
 
-      // обновляем дисплеи
-      document.getElementById('incomeDisplay').innerText   = `$${income}`;
-      document.getElementById('expensesDisplay').innerText = `$${totalSpend}`;
-       
-      // событие
-      let event='ничего', penalty=0, crisis=0;
-      const r = Math.random();
-      if(r<0.15){event='мелкая трата –$50'; penalty=-50;}
-      else if(r<0.25){event='кризис –6% инвестиций'; crisis=investments*0.06;}
-      else if(r<0.40){event='болезнь –5 здоровья'; health=Math.max(0,health-5);}
-      
-      // расчёты
-  
-      const free = income - totalSpend + penalty;
-      savings += save + free;
-      const growth = Math.random()<=0.7 ? Math.random()*0.03 : Math.random()*-0.01;
-      investments = (investments + invest - crisis)*(1+growth);
-
-      if (event !== 'болезнь –5 здоровья') {
-      if (survival < 500)    health -= ((500 - survival)/500) * 100;
-      else                   health += 5;
-      if (happiness >= 90)   health += 5;
-      health += (healthSpend/500) * 50;}
-
-      health = Math.round(Math.max(0, Math.min(100, health)));
-
-      if(extra==='да') {health = Math.max(0, health - 5);}
-      if(comfort<500) happiness -= ((500-comfort)/500)*10;
-      if(extra==='да') happiness -= 5;
-      happiness = Math.round(Math.max(0, happiness));
-
-      // обновляем интерфейс
-      document.getElementById('turn').innerText = turn;
-      document.getElementById('event').innerText = event;
-      document.getElementById('free').innerText = `$${Math.round(free)}`;
-      document.getElementById('savings').innerText = `$${Math.round(savings)}`;
-      document.getElementById('investments').innerText = `$${Math.round(investments)}`;
-      document.getElementById('healthResult').innerText = `${health}%`;
-      document.getElementById('happinessResult').innerText = `${happiness}%`;
-
-      updateBars();
-      updateHistory(event, free);
-      updateChart();
-
-      if(health<=0 || happiness<=0 || turn>=maxTurns){
-        let reason = health<=0 ? 'Ты потерял здоровье.' 
-                    : happiness<=0 ? 'Ты потерял счастье.' 
-                    : 'Ходы закончились.';
-        finishGame(reason);}
-    };
-
-    function updateBars(){
-    document.getElementById('healthBar').style.width    = `${health}%`;
-    document.getElementById('happinessBar').style.width = `${happiness}%`;
-    }
-
-    function updateHistory(event, free){
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td class="p-2">${turn}</td>
-        <td class="p-2">${event}</td>
-        <td class="p-2">$${Math.round(free)}</td>
-        <td class="p-2">$${Math.round(savings)}</td>
-        <td class="p-2">$${Math.round(investments)}</td>
-        <td class="p-2">${health}%</td>
-        <td class="p-2">${happiness}%</td>`;
-      document.getElementById('historyTable').appendChild(row);
-    }
-
-    function updateChart(){
-      let score = Math.floor(savings/1000) + Math.floor(investments/1000)*2;
-      if(health>70) score+=20;
-      if(happiness>70) score+=20;
-      const passive=(investments*0.05 + savings*0.03)/12;
-      if(passive>1000) score+=30;
-      scores.push(score);
-      chart.data.labels.push(turn);
-      chart.data.datasets[0].data.push(score);
-      chart.update();
-    }
-
-    function finishGame(reason){
-      document.getElementById('game-screen').classList.add('hidden');
-      const end = document.getElementById('end-screen');
-      end.classList.remove('hidden');
-      document.getElementById('endReason').innerText = reason;
-      document.getElementById('finalSavings').innerText = `$${Math.round(savings)}`;
-      document.getElementById('finalInvestments').innerText = `$${Math.round(investments)}`;
-      document.getElementById('finalHealth').innerText = `${health}%`;
-      document.getElementById('finalHappiness').innerText = `${happiness}%`;
-      document.getElementById('finalPassiveIncome').innerText = `$${Math.round((investments*0.05+savings*0.03)/12)}`;
-      const finalScore = scores[scores.length-1];
-      document.getElementById('finalScore').innerText = `${finalScore} баллов`;
-      let title = 'Новичок';
-      if(finalScore>=80) title='Финансовый магнат';
-      else if(health>90) title='Здоровяк';
-      else if(happiness>90) title='Счастливчик';
-      else if(health<30) title='Выживший';
-      document.getElementById('finalTitle').innerText = title;
-    }
+tickerEl.addEventListener('change',async e=>{
+  const tkr=e.target.value.trim().toUpperCase();
+  if(!tkr) return;
+  // risk‑free auto
+  fetchRiskFree().then(v=>{ if(v) document.getElementById('r').value=v.toFixed(4);});
+  // dividend auto
+  fetchQuote(tkr).then(q=>{
+    const div = (q.dividendYield&&q.dividendYield.raw)||0;
+    document.getElementById('q').value=div.toFixed(4);
   });
-  </script>
+  // expirations
+  const dates=await fetchExpirations(tkr);
+  expSel.innerHTML='';
+  dates.forEach(ts=>{
+    expSel.innerHTML+=`<option value="${ts}">${toDateStr(ts)}</option>`;
+  });
+  expSel.dispatchEvent(new Event('change'));
+});
+
+/*────────── on expiration selected ──────────*/
+expSel.addEventListener('change',async e=>{
+  const ts=parseInt(e.target.value);
+  const tkr=tickerEl.value.trim().toUpperCase();
+  if(!ts||!tkr) return;
+  // days until expiration
+  const days=Math.max(Math.round((ts-todaySec())/86400),0);
+  document.getElementById('days').value=days;
+  // chain
+  const chain=await fetchChain(tkr,ts);
+  const calls=chain.calls||[];
+  strikeSel.innerHTML='';
+  calls.forEach(c=>{
+    strikeSel.innerHTML += `<option value="${c.strike}" data-iv="${c.impliedVolatility}">${c.strike} (IV ${(c.impliedVolatility*100).toFixed(1)}%)</option>`;
+  });
+  strikeSel.dispatchEvent(new Event('change'));
+});
+
+/*────────── on strike select ──────────*/
+strikeSel.addEventListener('change',e=>{
+  const opt=e.target.selectedOptions[0];
+  if(!opt) return;
+  document.getElementById('K').value=opt.value;
+  document.getElementById('sigma').value=parseFloat(opt.dataset.iv).toFixed(4);
+});
+
+/*────────── IV skew chart ──────────*/
+let chart=null;
+
+document.getElementById('plotBtn').onclick=async()=>{
+  const ts=parseInt(expSel.value);
+  const tkr=tickerEl.value.trim().toUpperCase();
+  if(!ts||!tkr) return;
+  const chain=await fetchChain(tkr,ts);
+  const calls=chain.calls||[];
+  const strikes=calls.map(c=>c.strike);
+  const ivs=calls.map(c=>c.impliedVolatility*100);
+  const ctx=document.getElementById('ivChart');
+  ctx.classList.remove('hidden');
+  if(chart) chart.destroy();
+  chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{label:`IV % – ${toDateStr(ts)}` ,data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
+};
+
+/*───────── existing calculator logic (americanPutCRR, ruoPut, randn) ─────────*/
+function americanPutCRR(S,K,T,r,q,sigma,n){const dt=T/n,u=Math.exp(sigma*Math.sqrt(dt)),d=1/u,disc=Math.exp(-r*dt),p=(Math.exp((r-q)*dt)-d)/(u-d);const vals=Array(n+1);let Su=S*Math.pow(u,n);for(let i=0;i<=n;i++){vals[i]=Math.max(K-Su,0);Su*=d*d;}for(let step=n-1;step>=0;step--){for(let i=0;i<=step;i++){const cont=disc*(p*vals[i]+(1-p)*vals[i+1]);const early=Math.max(K-S*Math.pow(u,step-2*i),0);vals[i]=Math.max(cont,early);}}return vals[0];}
+function randn(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);} 
+function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){const total=Math.ceil(T*stepsPerYear),dt=T/total,drift=(r-q-0.5*sigma**2)*dt,diff=sigma*Math.sqrt(dt);let sum=0,count=0;for(let i=0;i<N;i++){let S=S0,hit=false;for(let s=0;s<total;s++){S*=Math.exp(drift+diff*randn());if(!hit&&S<=K)hit=true;}if(hit&&S>K){sum+=S-K;count++;}}return count?sum/N:0;}
+
+/*────────── main Calculate ─────────*/
+document.getElementById('calcBtn').onclick=()=>{
+  const g=id=>parseFloat(document.getElementById(id).value);
+  const S0=g('ticker')?g('S0')||parseFloat(document.getElementById('ticker').dataset.price||0):g('S0'); // fallback
+  const K=g('K'), days=g('days'), sigma=g('sigma'), r=g('r'), q=g('q');
+  if(!S0||!K||!days||!sigma){alert('Missing key inputs');return;}
+  const N=g('N'), steps=g('steps'), nTree=g('priceSteps');
+  const T=days/365;
+  const amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
+  const ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
+  const fair=amer+ruo;
+  document.getElementById('output').textContent=`American put (CRR): ${amer.toFixed(4)}\nRUO (missed-upside): ${ruo.toFixed(4)}\n———————————————\nFair put premium: ${fair.toFixed(4)}`;
+};
+</script>
 </body>
 </html>
