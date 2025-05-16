@@ -127,8 +127,8 @@ async function fetchRiskFree(){
              + `?series_id=DGS3MO&api_key=${FRED_KEY}`
              + '&file_type=json&limit=1&sort_order=desc';
 
-  // бесплатный прозрачный прокси с CORS-header
-  const url  = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(base);
+  const url = 'https://api.allorigins.win/raw?disableCache=true&url='
+          + encodeURIComponent(base);
 
   const js = await fetch(url).then(r => r.json()).catch(() => null);
   if(!js) return null;
@@ -176,10 +176,9 @@ expSel.addEventListener('change', async e => {
 
   strikeSel.innerHTML = '';
   puts.forEach(p => {
-    strikeSel.innerHTML +=
-      `<option value="${p.strike}" data-iv="${p.iv}">
-         ${p.strike} (IV ${(p.iv*100).toFixed(1)}%)
-       </option>`;
+  strikeSel.innerHTML += `<option value="${p.strike}" data-iv="${p.iv}">
+                            ${p.strike} (IV ${(p.iv*100).toFixed(1)}%)
+                          </option>`;
   });
   strikeSel.dispatchEvent(new Event('change'));
 });
