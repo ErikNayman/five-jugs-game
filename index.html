@@ -190,7 +190,7 @@ console.log('sample option', chain[0]);
   
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
-    sstrike : c.details?.strike_price ?? c.strike_price,
+    strike : c.details?.strike_price ?? c.strike_price,
     iv:     getIV(c)
   }));
   // --------------------------------------------
