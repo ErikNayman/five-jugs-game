@@ -88,20 +88,24 @@ const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
 /*──────────── API fetchers (Polygon) ───────────*/
+/******** 1. даты экспираций через reference/contracts ********/
 async function fetchExpirations(tkr){
-  const url = `https://api.polygon.io/v3/options/expirations?underlying_ticker=${tkr}&apiKey=${POLY_KEY}`;
+  const url = `https://api.polygon.io/v3/reference/options/contracts`
+            + `?underlying_ticker=${tkr}`
+            + `&limit=1000&apiKey=${POLY_KEY}`;        // 1-я страница хватает
   const js  = await fetch(url).then(r => r.json());
-  /*  ➜  берём массив строк  */
-  return (js.results || []).map(o => o.expiration_date);
+  const set = new Set((js.results || []).map(o => o.expiration_date));
+  return Array.from(set).sort();                       // ['2024-10-18', …]
 }
 
-async function fetchChain(tkr, isoDate) {
-  const url = `https://api.polygon.io/v3/options/contracts`
+/******** 2. цепочка путов тоже reference/contracts ********/
+async function fetchChain(tkr, isoDate){
+  const url = `https://api.polygon.io/v3/reference/options/contracts`
             + `?underlying_ticker=${tkr}`
             + `&expiration_date=${isoDate}`
             + `&contract_type=put`
             + `&limit=1000&apiKey=${POLY_KEY}`;
-  const js = await fetch(url).then(r => r.json());
+  const js  = await fetch(url).then(r => r.json());
   return js.results || [];
 }
 
@@ -152,6 +156,13 @@ expSel.addEventListener('change',async e=>{
 
   const chain=await fetchChain(tkr,iso);
   console.log('chain size', chain.length, chain[0]);
+  const puts = chain
+    .filter(c => c.option_type === 'put')        // reference-API
+    .map(c => ({
+      strike: c.strike_price,
+      iv:     c.implied_volatility               // или c.greeks?.implied_volatility
+    }));
+  
   const puts=chain.filter(c=>c.option_type==='P'); // only puts
   strikeSel.innerHTML='';
   puts.forEach(c=>{
