@@ -170,7 +170,7 @@ expSel.addEventListener('change', async e => {
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
     strike: c.strike_price,
-    iv:     c.implied_volatility || 0
+    iv:     c.greeks?.implied_volatility ?? 0
   }));
   // --------------------------------------------
 
@@ -199,7 +199,7 @@ document.getElementById('plotBtn').onclick=async()=>{
   if(!iso||!tkr) return;
   const chain=await fetchChain(tkr,iso);
   const strikes = chain.map(c => c.strike_price);
-  const ivs     = chain.map(c => (c.implied_volatility || 0) * 100);
+  const ivs     = chain.map(c => (c.greeks?.implied_volatility ?? 0) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
   chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
@@ -230,7 +230,11 @@ document.getElementById('calcBtn').onclick=()=>{
     const amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
     const ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
     const fair=amer+ruo;
-    document.getElementById('output').textContent=Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}\nRUO (missed-upside):    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       ${fair.toFixed(4)};
+    document.getElementById('output').textContent=Underlying S0:          
+    ${S0.toFixed(2)}\nAmerican put (CRR):     
+    ${amer.toFixed(4)}\nRUO (missed-upside):    
+    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       
+    ${fair.toFixed(4)};
   });
 };
 </script>
