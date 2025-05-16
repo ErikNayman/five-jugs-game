@@ -95,15 +95,14 @@ async function fetchExpirations(tkr){
   return (js.results || []).map(o => o.expiration_date);
 }
 
-async function fetchExpirations(tkr){
+async function fetchChain(tkr, isoDate) {
   const url = `https://api.polygon.io/v3/options/contracts`
             + `?underlying_ticker=${tkr}`
-            + `&limit=1000&apiKey=${POLY_KEY}`;       // ≤1000 строк за раз
-  const js  = await fetch(url).then(r => r.json());
-
-  // берём уникальные даты, сортируем
-  const set = new Set((js.results || []).map(o => o.expiration_date));
-  return Array.from(set).sort();        // ['2024-09-20', '2024-10-18', ...]
+            + `&expiration_date=${isoDate}`
+            + `&contract_type=put`
+            + `&limit=1000&apiKey=${POLY_KEY}`;
+  const js = await fetch(url).then(r => r.json());
+  return js.results || [];
 }
 
 /*──────────── risk‑free FRED ───────────*/
@@ -152,6 +151,7 @@ expSel.addEventListener('change',async e=>{
   document.getElementById('days').value=isoToDays(iso);
 
   const chain=await fetchChain(tkr,iso);
+  console.log('chain size', chain.length, chain[0]);
   const puts=chain.filter(c=>c.option_type==='P'); // only puts
   strikeSel.innerHTML='';
   puts.forEach(c=>{
