@@ -127,7 +127,14 @@ async function fetchChain(tkr, isoDate){
   return js.results || [];
 }
 
-
+// ── snapshot всей цепочки по тикеру ──
+async function fetchSnapshot(tkr){
+  const url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
+            + `?limit=1000&apiKey=${POLY_KEY}`;
+  const js  = await fetch(url).then(r => r.json());
+  return js.results || [];          // массив call + put
+}
+  
 /*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
   if(!FRED_KEY) return null;
@@ -175,12 +182,15 @@ expSel.addEventListener('change', async e => {
 
   document.getElementById('days').value = isoToDays(iso);
 
-  const chain = await fetchChain(tkr, iso);   // уже contains only puts
+  const chain = (await fetchSnapshot(tkr))    // snapshot → c IV
+                  .filter(c => c.details.contract_type === 'put' &&
+                               c.details.expiration_date === iso);
+  
 console.log('sample option', chain[0]);
   
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
-    strike: c.strike_price,
+    strike: c.details.strike_price,
     iv:     getIV(c)
   }));
   // --------------------------------------------
@@ -208,9 +218,11 @@ let chart=null;
 document.getElementById('plotBtn').onclick=async()=>{
   const iso=expSel.value; const tkr=tickerEl.value.trim().toUpperCase();
   if(!iso||!tkr) return;
-  const chain=await fetchChain(tkr,iso);
+  const chain=(await fetchSnapshot(tkr))
+                  .filter(c => c.details.contract_type === 'put' &&
+                               c.details.expiration_date === iso);
   console.log('sample option', chain[0]);
-  const strikes = chain.map(c => c.strike_price);
+  const strikes = chain.map(c => c.details.strike_price);
   const ivs     = chain.map(c => getIV(c) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
