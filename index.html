@@ -89,16 +89,16 @@ const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0
 
 /*──────────── API fetchers (Polygon) ───────────*/
 async function fetchExpirations(tkr){
-  const url = `https://api.polygon.io/v3/reference/options/expirations`
-            + `?ticker=${tkr}&apiKey=${POLY_KEY}`;
+  const url = `https://api.polygon.io/v3/reference/options/expirations?underlying_ticker=${tkr}&apiKey=${POLY_KEY}`;
   const js  = await fetch(url).then(r => r.json());
   /*  ➜  берём массив строк  */
   return (js.results || []).map(o => o.expiration_date);
 }
 
 async function fetchChain(tkr,isoDate){
-  const url=`https://api.polygon.io/v3/reference/options/contracts?`+
-            `ticker=${tkr}&expiration_date=${isoDate}&limit=1000&apiKey=${POLY_KEY}`;
+  const url = `https://api.polygon.io/v3/reference/options/contracts?`
++ `underlying_ticker=${tkr}&expiration_date=${isoDate}`
++ `&contract_type=put&limit=1000&apiKey=${POLY_KEY}`;;
   const js = await fetch(url).then(r=>r.json());
   return js.results||[];
 }
