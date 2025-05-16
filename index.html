@@ -210,7 +210,7 @@ document.getElementById('plotBtn').onclick=async()=>{
   const chain=await fetchChain(tkr,iso);
   console.log('sample option', chain[0]);
   const strikes = chain.map(c => c.strike_price);
-  const ivs     = chain.map(c => getIV(c) * 100;
+  const ivs     = chain.map(c => getIV(c) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
   chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
