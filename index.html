@@ -162,7 +162,7 @@ tickerEl.addEventListener('change',async e=>{
   if(!tkr) return;
 
   // risk‑free auto
-// fetchRiskFree().then(v=>{if(v!==null) document.getElementById('r').value=v.toFixed(4);});
+ fetchRiskFree().then(v=>{if(v!==null) document.getElementById('r').value=v.toFixed(4);});
 
   // expirations
   const dates=await fetchExpirations(tkr);
