@@ -2,19 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Option RUO Calculator – Auto‑Fill</title>
+  <title>Option RUO Calculator – Polygon Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* simple dark chart background */
-    canvas{background:#f8fafc;border-radius:12px}
-  </style>
+  <style>canvas{background:#f8fafc;border-radius:12px}</style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8 space-y-6">
-    <h1 class="text-2xl font-semibold text-center">Option RUO Calculator — Auto‑Fill</h1>
+    <h1 class="text-2xl font-semibold text-center">American Put — «Missed Upside» (RUO) — Polygon</h1>
 
-    <!-- ╔═══ AUTO‑FILL SECTION ═══╗ -->
+    <!-- ╔═══ AUTO-FILL (Polygon) ═══╗ -->
     <div class="grid grid-cols-2 gap-4">
       <label class="flex flex-col col-span-2">
         <span class="text-sm">Ticker</span>
@@ -27,7 +24,7 @@
       </label>
 
       <label class="flex flex-col">
-        <span class="text-sm">Strike</span>
+        <span class="text-sm">Strike (put)</span>
         <select id="strikeSelect" class="border rounded-lg px-3 py-2"></select>
       </label>
 
@@ -37,21 +34,21 @@
       </label>
 
       <label class="flex flex-col">
-        <span class="text-sm">Volatility σ (annual, IV)</span>
+        <span class="text-sm">Volatility σ (IV, annual)</span>
         <input id="sigma" readonly class="border rounded-lg px-3 py-2 bg-slate-100">
       </label>
 
       <label class="flex flex-col">
-        <span class="text-sm">Risk‑free rate r (auto FRED)</span>
+        <span class="text-sm">Risk‑free rate r (auto FRED)</span>
         <input id="r" class="border rounded-lg px-3 py-2 bg-slate-100">
       </label>
 
       <label class="flex flex-col">
-        <span class="text-sm">Dividend yield q (auto)</span>
-        <input id="q" class="border rounded-lg px-3 py-2 bg-slate-100">
+        <span class="text-sm">Dividend yield q (manual)</span>
+        <input id="q" value="0" class="border rounded-lg px-3 py-2">
       </label>
 
-      <!-- manual fine‑tune fields -->
+      <!-- simulation fine‑tune -->
       <label class="flex flex-col">
         <span class="text-sm">Binomial price steps</span>
         <input id="priceSteps" type="number" value="200" step="10" class="border rounded-lg px-3 py-2">
@@ -66,8 +63,8 @@
       </label>
     </div>
 
-    <!-- IV surface button -->
-    <button id="plotBtn" class="w-full bg-slate-600 hover:bg-slate-700 text-white rounded-lg py-2.5 font-medium">Show IV Skew</button>
+    <!-- IV skew chart optional -->
+    <button id="plotBtn" class="w-full bg-slate-600 hover:bg-slate-700 text-white rounded-lg py-2.5 font-medium">Show IV Skew</button>
     <canvas id="ivChart" height="250" class="hidden"></canvas>
 
     <!-- calculate -->
@@ -76,131 +73,116 @@
   </div>
 
 <script>
-const API_KEY = 'YOUR_RAPIDAPI_KEY'; // 🔑 insert your RapidAPI key (Yahoo Finance) here
-const FRED_KEY = 'YOUR_FRED_KEY';    // optional: FRED api key for risk‑free auto
-const YH_HOST  = 'yh-finance.p.rapidapi.com';
+/***** INSERT YOUR KEYS *****/
+const POLY_KEY = 'YOUR_POLYGON_KEY'; // ← обязательный
+const FRED_KEY = 'YOUR_FRED_KEY';    // ← опционально (для r)
+/********************************/ 
 
-const hdrs = {'X-RapidAPI-Key':API_KEY,'X-RapidAPI-Host':YH_HOST};
+/*──────────── helpers ───────────*/
+const todaySec = () => Date.now()/1000;
+const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
-/*────────── helpers ──────────*/
-const toDateStr = ts=>new Date(ts*1000).toISOString().slice(0,10);
-const todaySec = ()=>Date.now()/1000;
-
-/*────────── ticker change → expirations list ──────────*/
+/*──────────── API fetchers (Polygon) ───────────*/
 async function fetchExpirations(tkr){
-  const res = await fetch(`https://${YH_HOST}/options/v2/get-options?symbol=${tkr}`,{headers:hdrs});
-  const js  = await res.json();
-  return js.optionExpirationDates||[];
+  const url=`https://api.polygon.io/v3/reference/options/expirations?ticker=${tkr}&apiKey=${POLY_KEY}`;
+  const js = await fetch(url).then(r=>r.json());
+  return js.results||[]; // ['2025-06-20', ...]
 }
 
-/*────────── expiration change → strikes + IV, days ──────────*/
-async function fetchChain(tkr,ts){
-  const res = await fetch(`https://${YH_HOST}/options/v2/get-options?symbol=${tkr}&date=${ts}`,{headers:hdrs});
-  const js  = await res.json();
-  return js.options[0]; // {calls:[], puts:[]}
+async function fetchChain(tkr,isoDate){
+  const url=`https://api.polygon.io/v3/reference/options/contracts?`+
+            `ticker=${tkr}&expiration_date=${isoDate}&limit=1000&apiKey=${POLY_KEY}`;
+  const js = await fetch(url).then(r=>r.json());
+  return js.results||[];
 }
 
-/*────────── quote for dividend yield ──────────*/
-async function fetchQuote(tkr){
-  const res = await fetch(`https://${YH_HOST}/stock/v2/get-summary?symbol=${tkr}`,{headers:hdrs});
-  const js  = await res.json();
-  return js.summaryDetail||{};
-}
-
-/*────────── risk‑free from FRED (DGS3MO) ──────────*/
+/*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
   if(!FRED_KEY) return null;
-  const url = `https://api.stlouisfed.org/fred/series/observations?series_id=DGS3MO&api_key=${FRED_KEY}&file_type=json&limit=1&sort_order=desc`;
-  const res = await fetch(url);
-  const js  = await res.json();
-  const obs = js.observations&&js.observations[0];
-  return obs?parseFloat(obs.value)/100: null;
+  const url=`https://api.stlouisfed.org/fred/series/observations?series_id=DGS3MO&api_key=${FRED_KEY}&file_type=json&limit=1&sort_order=desc`;
+  const js = await fetch(url).then(r=>r.json());
+  const v  = js.observations && js.observations[0] && parseFloat(js.observations[0].value);
+  return isNaN(v)?null:v/100;
 }
 
-/*────────── populate expirations on ticker input ──────────*/
-const tickerEl = document.getElementById('ticker');
-const expSel   = document.getElementById('expSelect');
-const strikeSel= document.getElementById('strikeSelect');
+/*──────────── DOM elements ───────────*/
+const tickerEl=document.getElementById('ticker');
+const expSel  =document.getElementById('expSelect');
+const strikeSel=document.getElementById('strikeSelect');
 
+/*──────────── ticker change → expirations ───────────*/
 tickerEl.addEventListener('change',async e=>{
   const tkr=e.target.value.trim().toUpperCase();
   if(!tkr) return;
+
   // risk‑free auto
-  fetchRiskFree().then(v=>{ if(v) document.getElementById('r').value=v.toFixed(4);});
-  // dividend auto
-  fetchQuote(tkr).then(q=>{
-    const div = (q.dividendYield&&q.dividendYield.raw)||0;
-    document.getElementById('q').value=div.toFixed(4);
-  });
+  fetchRiskFree().then(v=>{if(v!==null) document.getElementById('r').value=v.toFixed(4);});
+
   // expirations
   const dates=await fetchExpirations(tkr);
   expSel.innerHTML='';
-  dates.forEach(ts=>{
-    expSel.innerHTML+=`<option value="${ts}">${toDateStr(ts)}</option>`;
-  });
+  dates.forEach(d=>{expSel.innerHTML+=`<option value="${d}">${d}</option>`;});
   expSel.dispatchEvent(new Event('change'));
 });
 
-/*────────── on expiration selected ──────────*/
+/*──────────── expiration → strikes + days ───────────*/
 expSel.addEventListener('change',async e=>{
-  const ts=parseInt(e.target.value);
-  const tkr=tickerEl.value.trim().toUpperCase();
-  if(!ts||!tkr) return;
-  // days until expiration
-  const days=Math.max(Math.round((ts-todaySec())/86400),0);
-  document.getElementById('days').value=days;
-  // chain
-  const chain=await fetchChain(tkr,ts);
-  const calls=chain.calls||[];
+  const iso=e.target.value; const tkr=tickerEl.value.trim().toUpperCase();
+  if(!iso||!tkr) return;
+  document.getElementById('days').value=isoToDays(iso);
+
+  const chain=await fetchChain(tkr,iso);
+  const puts=chain.filter(c=>c.option_type==='P'); // only puts
   strikeSel.innerHTML='';
-  calls.forEach(c=>{
-    strikeSel.innerHTML += `<option value="${c.strike}" data-iv="${c.impliedVolatility}">${c.strike} (IV ${(c.impliedVolatility*100).toFixed(1)}%)</option>`;
-  });
+  puts.forEach(c=>{
+    const iv=c.implied_volatility||0;
+    strikeSel.innerHTML+=`<option value="${c.strike_price}" data-iv="${iv}">${c.strike_price} (IV ${(iv*100).toFixed(1)}%)</option>`;});
   strikeSel.dispatchEvent(new Event('change'));
 });
 
-/*────────── on strike select ──────────*/
+/*──────────── strike select → K & σ ───────────*/
 strikeSel.addEventListener('change',e=>{
   const opt=e.target.selectedOptions[0];
   if(!opt) return;
   document.getElementById('K').value=opt.value;
-  document.getElementById('sigma').value=parseFloat(opt.dataset.iv).toFixed(4);
+  document.getElementById('sigma').value=parseFloat(opt.dataset.iv||0).toFixed(4);
 });
 
-/*────────── IV skew chart ──────────*/
+/*──────────── IV skew chart ───────────*/
 let chart=null;
-
 document.getElementById('plotBtn').onclick=async()=>{
-  const ts=parseInt(expSel.value);
-  const tkr=tickerEl.value.trim().toUpperCase();
-  if(!ts||!tkr) return;
-  const chain=await fetchChain(tkr,ts);
-  const calls=chain.calls||[];
-  const strikes=calls.map(c=>c.strike);
-  const ivs=calls.map(c=>c.impliedVolatility*100);
-  const ctx=document.getElementById('ivChart');
-  ctx.classList.remove('hidden');
+  const iso=expSel.value; const tkr=tickerEl.value.trim().toUpperCase();
+  if(!iso||!tkr) return;
+  const chain=await fetchChain(tkr,iso);
+  const strikes=chain.filter(c=>c.option_type==='P').map(c=>c.strike_price);
+  const ivs    =chain.filter(c=>c.option_type==='P').map(c=>c.implied_volatility*100);
+  const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
-  chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{label:`IV % – ${toDateStr(ts)}` ,data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
+  chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
 };
 
-/*───────── existing calculator logic (americanPutCRR, ruoPut, randn) ─────────*/
-function americanPutCRR(S,K,T,r,q,sigma,n){const dt=T/n,u=Math.exp(sigma*Math.sqrt(dt)),d=1/u,disc=Math.exp(-r*dt),p=(Math.exp((r-q)*dt)-d)/(u-d);const vals=Array(n+1);let Su=S*Math.pow(u,n);for(let i=0;i<=n;i++){vals[i]=Math.max(K-Su,0);Su*=d*d;}for(let step=n-1;step>=0;step--){for(let i=0;i<=step;i++){const cont=disc*(p*vals[i]+(1-p)*vals[i+1]);const early=Math.max(K-S*Math.pow(u,step-2*i),0);vals[i]=Math.max(cont,early);}}return vals[0];}
+/*──────────── option pricers (same as before) ───────────*/
+function americanPutCRR(S,K,T,r,q,sigma,n){const dt=T/n,u=Math.exp(sigma*Math.sqrt(dt)),d=1/u,disc=Math.exp(-r*dt),p=(Math.exp((r-q)*dt)-d)/(u-d);const v=Array(n+1);let Su=S*Math.pow(u,n);for(let i=0;i<=n;i++){v[i]=Math.max(K-Su,0);Su*=d*d;}for(let s=n-1;s>=0;s--){for(let i=0;i<=s;i++){const cont=disc*(p*v[i]+(1-p)*v[i+1]);const early=Math.max(K-S*Math.pow(u,s-2*i),0);v[i]=Math.max(cont,early);}}return v[0];}
 function randn(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);} 
-function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){const total=Math.ceil(T*stepsPerYear),dt=T/total,drift=(r-q-0.5*sigma**2)*dt,diff=sigma*Math.sqrt(dt);let sum=0,count=0;for(let i=0;i<N;i++){let S=S0,hit=false;for(let s=0;s<total;s++){S*=Math.exp(drift+diff*randn());if(!hit&&S<=K)hit=true;}if(hit&&S>K){sum+=S-K;count++;}}return count?sum/N:0;}
+function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){const tot=Math.ceil(T*stepsPerYear),dt=T/tot,drift=(r-q-0.5*sigma**2)*dt,diff=sigma*Math.sqrt(dt);let sum=0,cnt=0;for(let i=0;i<N;i++){let S=S0,hit=false;for(let s=0;s<tot;s++){S*=Math.exp(drift+diff*randn());if(!hit&&S<=K)hit=true;}if(hit&&S>K){sum+=S-K;cnt++;}}return cnt?sum/N:0;}
 
-/*────────── main Calculate ─────────*/
+/*──────────── Calculate ───────────*/
 document.getElementById('calcBtn').onclick=()=>{
   const g=id=>parseFloat(document.getElementById(id).value);
-  const S0=g('ticker')?g('S0')||parseFloat(document.getElementById('ticker').dataset.price||0):g('S0'); // fallback
-  const K=g('K'), days=g('days'), sigma=g('sigma'), r=g('r'), q=g('q');
-  if(!S0||!K||!days||!sigma){alert('Missing key inputs');return;}
-  const N=g('N'), steps=g('steps'), nTree=g('priceSteps');
-  const T=days/365;
-  const amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
-  const ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
-  const fair=amer+ruo;
-  document.getElementById('output').textContent=`American put (CRR): ${amer.toFixed(4)}\nRUO (missed-upside): ${ruo.toFixed(4)}\n———————————————\nFair put premium: ${fair.toFixed(4)}`;
+  const tkr=tickerEl.value.trim().toUpperCase();
+  if(!tkr){alert('Enter ticker');return;}
+  const quoteUrl=`https://api.polygon.io/v2/aggs/ticker/${tkr}/prev?adjusted=true&apiKey=${POLY_KEY}`;
+  fetch(quoteUrl).then(r=>r.json()).then(js=>{
+    const S0=js.results&&js.results[0]&&js.results[0].c;
+    if(!S0){alert('Price fetch failed');return;}
+    const K=g('K'),days=g('days'),sigma=g('sigma'),r=g('r'),q=g('q'),N=g('N'),steps=g('steps'),nTree=g('priceSteps');
+    if(!K||!days||!sigma){alert('Missing strike / sigma / days');return;}
+    const T=days/365;
+    const amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
+    const ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
+    const fair=amer+ruo;
+    document.getElementById('output').textContent=`Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}\nRUO (missed-upside):    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       ${fair.toFixed(4)}`;
+  });
 };
 </script>
 </body>
