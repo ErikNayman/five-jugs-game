@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Option RUO Calculator – Polygon Edition</title>
-  <script src="https://cdn.tailwindcss.com"></script>f
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>canvas{background:#f8fafc;border-radius:12px}</style>
 </head>
@@ -172,7 +172,6 @@ expSel.addEventListener('change',async e=>{
       iv:     c.implied_volatility               // или c.greeks?.implied_volatility
     }));
   
-  const puts=chain; // only puts
   strikeSel.innerHTML='';
   puts.forEach(c=>{
     const iv=c.implied_volatility||0;
