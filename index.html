@@ -169,9 +169,12 @@ expSel.addEventListener('change', async e => {
   const chain = await fetchChain(tkr, iso);   // уже contains only puts
 
   // ------ формируем массив объектов {strike, iv}
-  const puts = chain.map(c => ({
-    strike: c.strike_price,
-    iv:     c.greeks?.implied_volatility ?? 0
+  strike: c.strike_price,
+  iv:     c.greeks?.mid_iv
+       ?? c.greeks?.implied_volatility
+       ?? c.iv
+       ?? c.implied_volatility
+       ?? 0
   }));
   // --------------------------------------------
 
@@ -200,7 +203,7 @@ document.getElementById('plotBtn').onclick=async()=>{
   if(!iso||!tkr) return;
   const chain=await fetchChain(tkr,iso);
   const strikes = chain.map(c => c.strike_price);
-  const ivs     = chain.map(c => (c.greeks?.implied_volatility ?? 0) * 100);
+  const ivs     = chain.map(c => getIV(c) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
   chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
