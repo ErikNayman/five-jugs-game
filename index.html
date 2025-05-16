@@ -92,10 +92,10 @@ const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0
 
 /* 1. Все даты экспираций */
 async function fetchExpirations(tkr){
-  const url = `https://api.polygon.io/v3/reference/options/contracts`
-            + `?underlying_ticker=${tkr}`
-            + `&limit=1000`
-            + `&apiKey=${POLY_KEY}`;
+  const url = https://api.polygon.io/v3/reference/options/contracts
+            + ?underlying_ticker=${tkr}
+            + &limit=1000
+            + &apiKey=${POLY_KEY};
 
   const js  = await fetch(url).then(r => r.json());
 
@@ -106,12 +106,12 @@ async function fetchExpirations(tkr){
 
 /* 2. Цепочка путов на выбранную дату */
 async function fetchChain(tkr, isoDate){
-  const url = `https://api.polygon.io/v3/reference/options/contracts`
-            + `?underlying_ticker=${tkr}`
-            + `&expiration_date=${isoDate}`
-            + `&contract_type=put`
-            + `&limit=1000`
-            + `&apiKey=${POLY_KEY}`;
+  const url = https://api.polygon.io/v3/reference/options/contracts
+            + ?underlying_ticker=${tkr}
+            + &expiration_date=${isoDate}
+            + &contract_type=put
+            + &limit=1000
+            + &apiKey=${POLY_KEY};
 
   const js = await fetch(url).then(r => r.json());
   return js.results || [];
@@ -124,7 +124,7 @@ async function fetchRiskFree(){
 
   // оригинальный URL FRED
   const base = 'https://api.stlouisfed.org/fred/series/observations'
-             + `?series_id=DGS3MO&api_key=${FRED_KEY}`
+             + ?series_id=DGS3MO&api_key=${FRED_KEY}
              + '&file_type=json&limit=1&sort_order=desc';
 
   const url = 'https://api.allorigins.win/raw?disableCache=true&url='
@@ -153,7 +153,7 @@ tickerEl.addEventListener('change',async e=>{
   // expirations
   const dates=await fetchExpirations(tkr);
   expSel.innerHTML='';
-  dates.forEach(d=>{expSel.innerHTML+=`<option value="${d}">${d}</option>`;});
+  dates.forEach(d=>{expSel.innerHTML+=<option value="${d}">${d}</option>;});
   expSel.dispatchEvent(new Event('change'));
 });
 
@@ -176,9 +176,9 @@ expSel.addEventListener('change', async e => {
 
   strikeSel.innerHTML = '';
   puts.forEach(p => {
-  strikeSel.innerHTML += `<option value="${p.strike}" data-iv="${p.iv}">
+  strikeSel.innerHTML += <option value="${p.strike}" data-iv="${p.iv}">
                             ${p.strike} (IV ${(p.iv*100).toFixed(1)}%)
-                          </option>`;
+                          </option>;
   });
   strikeSel.dispatchEvent(new Event('change'));
 });
@@ -215,7 +215,7 @@ document.getElementById('calcBtn').onclick=()=>{
   const g=id=>parseFloat(document.getElementById(id).value);
   const tkr=tickerEl.value.trim().toUpperCase();
   if(!tkr){alert('Enter ticker');return;}
-  const quoteUrl=`https://api.polygon.io/v2/aggs/ticker/${tkr}/prev?adjusted=true&apiKey=${POLY_KEY}`;
+  const quoteUrl=https://api.polygon.io/v2/aggs/ticker/${tkr}/prev?adjusted=true&apiKey=${POLY_KEY};
   fetch(quoteUrl).then(r=>r.json()).then(js=>{
     const S0=js.results&&js.results[0]&&js.results[0].c;
     if(!S0){alert('Price fetch failed');return;}
@@ -230,7 +230,7 @@ document.getElementById('calcBtn').onclick=()=>{
     const amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
     const ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
     const fair=amer+ruo;
-    document.getElementById('output').textContent=`Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}\nRUO (missed-upside):    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       ${fair.toFixed(4)}`;
+    document.getElementById('output').textContent=Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}\nRUO (missed-upside):    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       ${fair.toFixed(4)};
   });
 };
 </script>
