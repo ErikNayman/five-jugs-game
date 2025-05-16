@@ -29,6 +29,11 @@
       </label>
 
       <label class="flex flex-col">
+  <span class="text-sm">Strike K (filled auto)</span>
+  <input id="K" readonly class="border rounded-lg px-3 py-2 bg-slate-100">
+</label>
+
+      <label class="flex flex-col">
         <span class="text-sm">Days to expiration</span>
         <input id="days" readonly class="border rounded-lg px-3 py-2 bg-slate-100">
       </label>
@@ -175,7 +180,12 @@ document.getElementById('calcBtn').onclick=()=>{
   fetch(quoteUrl).then(r=>r.json()).then(js=>{
     const S0=js.results&&js.results[0]&&js.results[0].c;
     if(!S0){alert('Price fetch failed');return;}
-    const K=g('K'),days=g('days'),sigma=g('sigma'),r=g('r'),q=g('q'),N=g('N'),steps=g('steps'),nTree=g('priceSteps');
+    const K = g('K'),
+      days = g('days'),
+      sigma = g('sigma') || 0.25,   // default 25 % если поле пустое
+      r = g('r')     || 0.043,       // default 4.3 %
+      q = g('q')     || 0.02,      // default 2 %
+      N=g('N'),steps=g('steps'),nTree=g('priceSteps');
     if(!K||!days||!sigma){alert('Missing strike / sigma / days');return;}
     const T=days/365;
     const amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
