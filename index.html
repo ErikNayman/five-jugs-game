@@ -172,7 +172,7 @@ expSel.addEventListener('change',async e=>{
       iv:     c.implied_volatility               // или c.greeks?.implied_volatility
     }));
   
-  const puts=chain.filter(c=>c.option_type==='P'); // only puts
+  const puts=chain; // only puts
   strikeSel.innerHTML='';
   puts.forEach(c=>{
     const iv=c.implied_volatility||0;
