@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Option RUO Calculator – Polygon Edition</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>f
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>canvas{background:#f8fafc;border-radius:12px}</style>
 </head>
@@ -88,26 +88,35 @@ const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
 /*──────────── API fetchers (Polygon) ───────────*/
-/******** 1. даты экспираций через reference/contracts ********/
+/*──────────── API fetchers (Polygon Basic) ───────────*/
+
+/* 1. Все даты экспираций */
 async function fetchExpirations(tkr){
   const url = `https://api.polygon.io/v3/reference/options/contracts`
             + `?underlying_ticker=${tkr}`
-            + `&limit=1000&apiKey=${POLY_KEY}`;        // 1-я страница хватает
+            + `&limit=1000`
+            + `&apiKey=${POLY_KEY}`;
+
   const js  = await fetch(url).then(r => r.json());
+
+  /* собираем уникальные даты и сортируем */
   const set = new Set((js.results || []).map(o => o.expiration_date));
-  return Array.from(set).sort();                       // ['2024-10-18', …]
+  return Array.from(set).sort();     // ['2024-10-18', '2024-11-15', …]
 }
 
-/******** 2. цепочка путов тоже reference/contracts ********/
+/* 2. Цепочка путов на выбранную дату */
 async function fetchChain(tkr, isoDate){
   const url = `https://api.polygon.io/v3/reference/options/contracts`
             + `?underlying_ticker=${tkr}`
             + `&expiration_date=${isoDate}`
             + `&contract_type=put`
-            + `&limit=1000&apiKey=${POLY_KEY}`;
-  const js  = await fetch(url).then(r => r.json());
+            + `&limit=1000`
+            + `&apiKey=${POLY_KEY}`;
+
+  const js = await fetch(url).then(r => r.json());
   return js.results || [];
 }
+
 
 /*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
