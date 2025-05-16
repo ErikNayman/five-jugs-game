@@ -87,15 +87,6 @@ const FRED_KEY = 'a0e616b9949b55af5e10c51f9a3bf272';    // ← опционал�
 const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
-/*──── helper: читаем IV из объекта опциона ────*/
-  function getIV(opt){
-  return opt.greeks?.mid_iv              // Starter/Developer
-      ?? opt.greeks?.implied_volatility  // fallback
-      ?? opt.iv                          // старое поле
-      ?? opt.implied_volatility          // ещё один синоним
-      ?? 0;
-}
-  
 /*──────────── API fetchers (Polygon) ───────────*/
 /*──────────── API fetchers (Polygon Basic) ───────────*/
 
@@ -119,7 +110,6 @@ async function fetchChain(tkr, isoDate){
             + `?underlying_ticker=${tkr}`
             + `&expiration_date=${isoDate}`
             + `&contract_type=put`
-            + `&include_greeks=true`
             + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
@@ -127,14 +117,7 @@ async function fetchChain(tkr, isoDate){
   return js.results || [];
 }
 
-// ── snapshot всей цепочки по тикеру ──
-async function fetchSnapshot(tkr){
-  const url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
-            + `?limit=1000&apiKey=${POLY_KEY}`;
-  const js  = await fetch(url).then(r => r.json());
-  return js.results || [];          // массив call + put
-}
-  
+
 /*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
   if(!FRED_KEY) return null;
@@ -182,16 +165,12 @@ expSel.addEventListener('change', async e => {
 
   document.getElementById('days').value = isoToDays(iso);
 
-  const chain = (await fetchSnapshot(tkr))    // snapshot → c IV
-                  .filter(c => c.details.contract_type === 'put' &&
-                               c.details.expiration_date === iso);
-  
-console.log('sample option', chain[0]);
-  
+  const chain = await fetchChain(tkr, iso);   // уже contains only puts
+
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
-    strike : c.details?.strike_price ?? c.strike_price,
-    iv:     getIV(c)
+    strike: c.strike_price,
+    iv:     c.implied_volatility || 0
   }));
   // --------------------------------------------
 
@@ -218,12 +197,9 @@ let chart=null;
 document.getElementById('plotBtn').onclick=async()=>{
   const iso=expSel.value; const tkr=tickerEl.value.trim().toUpperCase();
   if(!iso||!tkr) return;
-  const chain=(await fetchSnapshot(tkr))
-                  .filter(c => c.details.contract_type === 'put' &&
-                               c.details.expiration_date === iso);
-  console.log('sample option', chain[0]);
-  const strikes = chain.map(c => c.details?.strike_price ?? c.strike_price);
-  const ivs     = chain.map(c => getIV(c) * 100);
+  const chain=await fetchChain(tkr,iso);
+  const strikes = chain.map(c => c.strike_price);
+  const ivs     = chain.map(c => (c.implied_volatility || 0) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
   chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
