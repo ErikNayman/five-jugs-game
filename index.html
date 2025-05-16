@@ -128,23 +128,27 @@ async function fetchChain(tkr, isoDate){
 }
 
 
-/*──────────── risk‑free FRED ───────────*/
+/*──────────── risk-free FRED ───────────*/
 async function fetchRiskFree(){
-  if(!FRED_KEY) return null;
+  if(!FRED_KEY) return null;                 // ключ не задан → пропускаем
 
-  // оригинальный URL FRED
-  const base = 'https://api.stlouisfed.org/fred/series/observations'
+  /* URL без прокси */
+  const fred = 'https://api.stlouisfed.org/fred/series/observations'
              + `?series_id=DGS3MO&api_key=${FRED_KEY}`
              + '&file_type=json&limit=1&sort_order=desc';
 
-  const url = 'https://api.allorigins.win/raw?disableCache=true&url='
-          + encodeURIComponent(base);
+  /* любой открытый прокси с Access-Control-Allow-Origin: * */
+  const url  = 'https://cors.isomorphic-git.org/' + fred;
+  //  ▸ если когда-нибудь перестанет отвечать — смените на другой аналогичный.
 
-  const js = await fetch(url).then(r => r.json()).catch(() => null);
-  if(!js) return null;
-
-  const v = parseFloat(js.observations?.[0]?.value);
-  return isNaN(v) ? null : v/100;   // в десятичный вид
+  try{
+    const js = await fetch(url).then(r => r.json());
+    const val = parseFloat(js.observations?.[0]?.value);
+    return isNaN(val) ? null : val / 100;    // переводим в десятичное
+  }catch(e){
+    console.warn('risk-free fetch failed:', e);
+    return null;                             // в случае ошибки не ломаем весь код
+  }
 }
 
 /*──────────── DOM elements ───────────*/
@@ -158,7 +162,7 @@ tickerEl.addEventListener('change',async e=>{
   if(!tkr) return;
 
   // risk‑free auto
-  fetchRiskFree().then(v=>{if(v!==null) document.getElementById('r').value=v.toFixed(4);});
+// fetchRiskFree().then(v=>{if(v!==null) document.getElementById('r').value=v.toFixed(4);});
 
   // expirations
   const dates=await fetchExpirations(tkr);
