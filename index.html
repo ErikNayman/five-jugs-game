@@ -89,9 +89,11 @@ const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0
 
 /*──────────── API fetchers (Polygon) ───────────*/
 async function fetchExpirations(tkr){
-  const url=`https://api.polygon.io/v3/reference/options/expirations?ticker=${tkr}&apiKey=${POLY_KEY}`;
-  const js = await fetch(url).then(r=>r.json());
-  return js.results||[]; // ['2025-06-20', ...]
+  const url = `https://api.polygon.io/v3/reference/options/expirations`
+            + `?ticker=${tkr}&apiKey=${POLY_KEY}`;
+  const js  = await fetch(url).then(r => r.json());
+  /*  ➜  берём массив строк  */
+  return (js.results || []).map(o => o.expiration_date);
 }
 
 async function fetchChain(tkr,isoDate){
@@ -104,10 +106,20 @@ async function fetchChain(tkr,isoDate){
 /*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
   if(!FRED_KEY) return null;
-  const url=`https://api.stlouisfed.org/fred/series/observations?series_id=DGS3MO&api_key=${FRED_KEY}&file_type=json&limit=1&sort_order=desc`;
-  const js = await fetch(url).then(r=>r.json());
-  const v  = js.observations && js.observations[0] && parseFloat(js.observations[0].value);
-  return isNaN(v)?null:v/100;
+
+  // оригинальный URL FRED
+  const base = 'https://api.stlouisfed.org/fred/series/observations'
+             + `?series_id=DGS3MO&api_key=${FRED_KEY}`
+             + '&file_type=json&limit=1&sort_order=desc';
+
+  // бесплатный прозрачный прокси с CORS-header
+  const url  = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(base);
+
+  const js = await fetch(url).then(r => r.json()).catch(() => null);
+  if(!js) return null;
+
+  const v = parseFloat(js.observations?.[0]?.value);
+  return isNaN(v) ? null : v/100;   // в десятичный вид
 }
 
 /*──────────── DOM elements ───────────*/
