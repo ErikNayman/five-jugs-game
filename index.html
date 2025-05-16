@@ -87,6 +87,15 @@ const FRED_KEY = 'a0e616b9949b55af5e10c51f9a3bf272';    // ← опционал�
 const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
+/*──── helper: универсально достаём IV из объекта опциона ────*/
+function getIV(c){
+  return c.greeks?.mid_iv               // Basic + include_greeks=true
+      ?? c.greeks?.implied_volatility   // запасной вариант
+      ?? c.iv                           // корневое поле iv
+      ?? c.implied_volatility           // ещё один синоним
+      ?? 0;                             // fallback — 0, если IV нет
+}
+  
 /*──────────── API fetchers (Polygon) ───────────*/
 /*──────────── API fetchers (Polygon Basic) ───────────*/
 
@@ -110,6 +119,7 @@ async function fetchChain(tkr, isoDate){
             + `?underlying_ticker=${tkr}`
             + `&expiration_date=${isoDate}`
             + `&contract_type=put`
+            + `&include_greeks=true`
             + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
@@ -170,7 +180,8 @@ expSel.addEventListener('change', async e => {
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
     strike: c.strike_price,
-    iv:     c.implied_volatility || 0
+    iv:     getIV(c)
+  //    iv:     c.implied_volatility || 0
   }));
   // --------------------------------------------
 
