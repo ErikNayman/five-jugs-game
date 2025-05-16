@@ -157,27 +157,33 @@ tickerEl.addEventListener('change',async e=>{
   expSel.dispatchEvent(new Event('change'));
 });
 
-/*──────────── expiration → strikes + days ───────────*/
-expSel.addEventListener('change',async e=>{
-  const iso=e.target.value; const tkr=tickerEl.value.trim().toUpperCase();
-  if(!iso||!tkr) return;
-  document.getElementById('days').value=isoToDays(iso);
+/*──────── expiration → strikes + days ──────────*/
+expSel.addEventListener('change', async e => {
+  const iso = e.target.value;
+  const tkr = tickerEl.value.trim().toUpperCase();
+  if (!iso || !tkr) return;
 
-  const chain=await fetchChain(tkr,iso);
-  console.log('chain size', chain.length, chain[0]);
-  const puts = chain
-    .filter(c => c.option_type === 'put')        // reference-API
-    .map(c => ({
-      strike: c.strike_price,
-      iv:     c.implied_volatility               // или c.greeks?.implied_volatility
-    }));
-  
-  strikeSel.innerHTML='';
-  puts.forEach(c=>{
-    const iv=c.implied_volatility||0;
-    strikeSel.innerHTML+=`<option value="${c.strike_price}" data-iv="${iv}">${c.strike_price} (IV ${(iv*100).toFixed(1)}%)</option>`;});
+  document.getElementById('days').value = isoToDays(iso);
+
+  const chain = await fetchChain(tkr, iso);   // уже contains only puts
+
+  // ------ формируем массив объектов {strike, iv}
+  const puts = chain.map(c => ({
+    strike: c.strike_price,
+    iv:     c.implied_volatility || 0
+  }));
+  // --------------------------------------------
+
+  strikeSel.innerHTML = '';
+  puts.forEach(p => {
+    strikeSel.innerHTML +=
+      `<option value="${p.strike}" data-iv="${p.iv}">
+         ${p.strike} (IV ${(p.iv*100).toFixed(1)}%)
+       </option>`;
+  });
   strikeSel.dispatchEvent(new Event('change'));
 });
+
 
 /*──────────── strike select → K & σ ───────────*/
 strikeSel.addEventListener('change',e=>{
@@ -193,8 +199,8 @@ document.getElementById('plotBtn').onclick=async()=>{
   const iso=expSel.value; const tkr=tickerEl.value.trim().toUpperCase();
   if(!iso||!tkr) return;
   const chain=await fetchChain(tkr,iso);
-  const strikes=chain.filter(c=>c.option_type==='P').map(c=>c.strike_price);
-  const ivs    =chain.filter(c=>c.option_type==='P').map(c=>c.implied_volatility*100);
+  const strikes = chain.map(c => c.strike_price);
+  const ivs     = chain.map(c => (c.implied_volatility || 0) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
   chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
