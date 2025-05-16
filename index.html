@@ -110,6 +110,7 @@ async function fetchChain(tkr, isoDate){
             + `?underlying_ticker=${tkr}`
             + `&expiration_date=${isoDate}`
             + `&contract_type=put`
+            + `&include_greeks=true`
             + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
