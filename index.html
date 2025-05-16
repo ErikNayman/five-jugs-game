@@ -190,7 +190,7 @@ console.log('sample option', chain[0]);
   
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
-    strike: c.details.strike_price,
+    sstrike : c.details?.strike_price ?? c.strike_price,
     iv:     getIV(c)
   }));
   // --------------------------------------------
@@ -222,7 +222,7 @@ document.getElementById('plotBtn').onclick=async()=>{
                   .filter(c => c.details.contract_type === 'put' &&
                                c.details.expiration_date === iso);
   console.log('sample option', chain[0]);
-  const strikes = chain.map(c => c.details.strike_price);
+  const strikes = chain.map(c => c.details?.strike_price ?? c.strike_price);
   const ivs     = chain.map(c => getIV(c) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
