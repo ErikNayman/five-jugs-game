@@ -176,7 +176,8 @@ expSel.addEventListener('change', async e => {
   document.getElementById('days').value = isoToDays(iso);
 
   const chain = await fetchChain(tkr, iso);   // уже contains only puts
-
+console.log('sample option', chain[0]);
+  
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
     strike: c.strike_price,
