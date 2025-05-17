@@ -29,7 +29,7 @@
       </label>
 
       <label class="flex flex-col">
-  <span class="text-sm">Strike K (filled auto)</span>
+  <span class="text-sm">Strike K (auto-filled)</span>
   <input id="K" readonly class="border rounded-lg px-3 py-2 bg-slate-100">
 </label>
 
@@ -87,7 +87,6 @@ const FRED_KEY = 'a0e616b9949b55af5e10c51f9a3bf272';    // ← опционал�
 const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
-/*──────────── API fetchers (Polygon) ───────────*/
 /*──────────── API fetchers (Polygon Basic) ───────────*/
 
 /* 1. Все даты экспираций */
@@ -216,7 +215,7 @@ function americanPutCRR(S,K,T,r,q,sigma,n){
   for(let s=n-1;s>=0;s--){
     for(let i=0;i<=s;i++){
       const cont=disc*(p*v[i]+(1-p)*v[i+1]);
-      const early=Math.max(K-S*Math.pow(u,s-2*i),0);
+      const early=Math.max(K-S*Math.pow(u,2*i-s),0);
       v[i]=Math.max(cont,early);
     }
   }
