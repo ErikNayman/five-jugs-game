@@ -87,7 +87,7 @@ const FRED_KEY = 'a0e616b9949b55af5e10c51f9a3bf272';    // ← опционал�
 const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
-  /*──── helper: читаем IV из объекта опциона ────*/
+ /*──── helper: читаем IV из объекта опциона ────*/
 function getIV(opt){
   return opt.greeks?.mid_iv
       ?? opt.greeks?.implied_volatility
@@ -102,7 +102,7 @@ function getIV(opt){
 async function fetchExpirations(tkr){
   const url = `https://api.polygon.io/v3/reference/options/contracts`
             + `?underlying_ticker=${tkr}`
-            + `&limit=1000`
+            + `&limit=100`
             + `&apiKey=${POLY_KEY}`;
 
   const js  = await fetch(url).then(r => r.json());
@@ -117,8 +117,7 @@ async function fetchChain(tkr, isoDate){
   const url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
             + `?expiration_date=${isoDate}`
             + `&contract_type=put`
-            + `&greeks=true`
-            + `&limit=1000`
+            + `&limit=100`
             + `&apiKey=${POLY_KEY}`;
 
   const js = await fetch(url).then(r => r.json());
@@ -176,10 +175,10 @@ expSel.addEventListener('change', async e => {
   const chain = await fetchChain(tkr, iso);   // уже contains only puts
 
   // ------ формируем массив объектов {strike, iv}
-  const puts = chain.map(c => ({
-    strike: c.details?.strike_price ?? c.strike_price,
-    iv:     getIV(c)
-  }));
+const puts = chain.map(c => ({
+  strike: c.details.strike_price,
+  iv:     (c.greeks && c.greeks.implied_volatility) || 0
+}));
   // --------------------------------------------
 
   strikeSel.innerHTML = '';
