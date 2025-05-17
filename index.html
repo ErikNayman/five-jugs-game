@@ -87,6 +87,15 @@ const FRED_KEY = 'a0e616b9949b55af5e10c51f9a3bf272';    // ← опционал�
 const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
+  /*──── helper: читаем IV из объекта опциона ────*/
+function getIV(opt){
+  return opt.greeks?.mid_iv
+      ?? opt.greeks?.implied_volatility
+      ?? opt.iv
+      ?? opt.implied_volatility
+      ?? 0;
+}
+  
 /*──────────── API fetchers (Polygon Basic) ───────────*/
 
 /* 1. Все даты экспираций */
@@ -103,11 +112,12 @@ async function fetchExpirations(tkr){
   return Array.from(set).sort();     // ['2024-10-18', '2024-11-15', …]
 }
 
-/* 2. Цепочка путов на выбранную дату */
+/* 2. Цепочка путов на выбранную дату (snapshot с IV) */
 async function fetchChain(tkr, isoDate){
   const url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
             + `?expiration_date=${isoDate}`
             + `&contract_type=put`
+            + `&greeks=true`
             + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
@@ -167,8 +177,8 @@ expSel.addEventListener('change', async e => {
 
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
-strike: c.details.strike_price,
-    iv:     (c.greeks && c.greeks.implied_volatility) || 0
+    strike: c.details?.strike_price ?? c.strike_price,
+    iv:     getIV(c)
   }));
   // --------------------------------------------
 
@@ -196,8 +206,8 @@ document.getElementById('plotBtn').onclick=async()=>{
   const iso=expSel.value; const tkr=tickerEl.value.trim().toUpperCase();
   if(!iso||!tkr) return;
   const chain=await fetchChain(tkr,iso);
-  const strikes = chain.map(c => c.details.strike_price);
-  const ivs     = chain.map(c => ((c.greeks && c.greeks.implied_volatility) || 0) * 100);
+    const strikes = chain.map(c => c.details?.strike_price ?? c.strike_price);
+  const ivs     = chain.map(c => getIV(c) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
   chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
