@@ -206,10 +206,40 @@ document.getElementById('plotBtn').onclick=async()=>{
 };
 
 /*──────────── option pricers (same as before) ───────────*/
-function americanPutCRR(S,K,T,r,q,sigma,n){const dt=T/n,u=Math.exp(sigma*Math.sqrt(dt)),d=1/u,disc=Math.exp(-r*dt),p=(Math.exp((r-q)*dt)-d)/(u-d);const v=Array(n+1);let Su=S*Math.pow(u,n);for(let i=0;i<=n;i++){v[i]=Math.max(K-Su,0);Su*=d*d;}for(let s=n-1;s>=0;s--){for(let i=0;i<=s;i++){const cont=disc*(p*v[i]+(1-p)*v[i+1]);const early=Math.max(K-S*Math.pow(u,s-2*i),0);v[i]=Math.max(cont,early);}}return v[0];}
-function randn(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);} 
-function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){const tot=Math.ceil(T*stepsPerYear),dt=T/tot,drift=(r-q-0.5*sigma**2)*dt,diff=sigma*Math.sqrt(dt);let sum=0,cnt=0;for(let i=0;i<N;i++){let S=S0,hit=false;for(let s=0;s<tot;s++){S*=Math.exp(drift+diff*randn());if(!hit&&S<=K)hit=true;}if(hit&&S>K){sum+=S-K;cnt++;}}return cnt?sum/N:0;}
-
+function americanPutCRR(S,K,T,r,q,sigma,n){
+  n=Math.max(1,Math.floor(n||1));
+  const dt=T/n,u=Math.exp(sigma*Math.sqrt(dt)),d=1/u,
+        disc=Math.exp(-r*dt),p=(Math.exp((r-q)*dt)-d)/(u-d);
+  const v=Array(n+1);
+  let Su=S*Math.pow(u,n);
+  for(let i=0;i<=n;i++){v[i]=Math.max(K-Su,0);Su*=d*d;}
+  for(let s=n-1;s>=0;s--){
+    for(let i=0;i<=s;i++){
+      const cont=disc*(p*v[i]+(1-p)*v[i+1]);
+      const early=Math.max(K-S*Math.pow(u,s-2*i),0);
+      v[i]=Math.max(cont,early);
+    }
+  }
+  return v[0];
+}
+function randn(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){
+  const tot=Math.max(1,Math.ceil(T*stepsPerYear)),
+        dt=T/tot,
+        drift=(r-q-0.5*sigma**2)*dt,
+        diff=sigma*Math.sqrt(dt);
+  let sum=0,cnt=0;
+  for(let i=0;i<N;i++){
+    let S=S0,hit=false;
+    for(let s=0;s<tot;s++){
+      S*=Math.exp(drift+diff*randn());
+      if(!hit&&S<=K)hit=true;
+    }
+    if(hit&&S>K){sum+=S-K;cnt++;}
+  }
+  return cnt?sum/N:0;
+}
+  
 /*──────────── Calculate ───────────*/
 document.getElementById('calcBtn').onclick=()=>{
   const g=id=>parseFloat(document.getElementById(id).value);
@@ -236,3 +266,5 @@ document.getElementById('calcBtn').onclick=()=>{
 </script>
 </body>
 </html>
+
+
