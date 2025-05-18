@@ -108,6 +108,7 @@ async function fetchChain(tkr, isoDate){
   const url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
             + `?expiration_date=${isoDate}`
             + `&contract_type=put`
+            + `&includeGreeks=true`
             + `&limit=100`
             + `&apiKey=${POLY_KEY}`;
 
