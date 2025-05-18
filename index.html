@@ -96,12 +96,7 @@ async function fetchExpirations(tkr){
             + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
-const set = new Set();
-  while(url){
-    const js = await fetch(url).then(r => r.json());
-    (js.results || []).forEach(o => set.add(o.expiration_date));
-    url = js.next_url || null;
-  }
+  const js  = await fetch(url).then(r => r.json());
 
   /* собираем уникальные даты и сортируем */
   const set = new Set((js.results || []).map(o => o.expiration_date));
@@ -110,26 +105,14 @@ const set = new Set();
 
 /* 2. Цепочка путов на выбранную дату */
 async function fetchChain(tkr, isoDate){
+  const url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
+            + `?expiration_date=${isoDate}`
+            + `&contract_type=put`
+            + `&limit=1000`
+            + `&apiKey=${POLY_KEY}`;
 
-  let url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
-          + `?expiration_date=${isoDate}`
-          + `&contract_type=put`
-          + `&includeGreeks=true`
-          + `&limit=100`
-          + `&apiKey=${POLY_KEY}`;
-
-  const all=[];
-  while(url){
-    const js=await fetch(url).then(r=>r.json());
-    const arr=Array.isArray(js.results)
-               ? js.results
-               : (js.results&&typeof js.results==='object'
-                     ? Object.values(js.results)
-                     : []);
-    all.push(...arr);
-    url=js.next_url||null;
-  }
-  return all;
+  const js = await fetch(url).then(r => r.json());
+  return js.results || [];
 }
 
 /*──────────── risk‑free FRED ───────────*/
