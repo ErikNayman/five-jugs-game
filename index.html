@@ -96,7 +96,12 @@ async function fetchExpirations(tkr){
             + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
-  const js  = await fetch(url).then(r => r.json());
+const set = new Set();
+  while(url){
+    const js = await fetch(url).then(r => r.json());
+    (js.results || []).forEach(o => set.add(o.expiration_date));
+    url = js.next_url || null;
+  }
 
   /* собираем уникальные даты и сортируем */
   const set = new Set((js.results || []).map(o => o.expiration_date));
@@ -115,7 +120,6 @@ async function fetchChain(tkr, isoDate){
   const js = await fetch(url).then(r => r.json());
   return js.results || [];
 }
-
 
 /*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
