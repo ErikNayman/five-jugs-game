@@ -104,11 +104,14 @@ async function fetchExpirations(tkr){
              + `?underlying_ticker=${tkr}`
              + `&limit=1000`
              + `&apiKey=${POLY_KEY}`;
-  
-  const url = 'https://api.allorigins.win/raw?disableCache=true&url='
-            + encodeURIComponent(base);
 
-  const js  = await fetch(url).then(r => r.json()).catch(() => ({}));
+  const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+              + encodeURIComponent(base);
+
+  let js = await fetch(base).then(r => r.json()).catch(() => null);
+  if(!js){
+    js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
+  }
 
   /* собираем уникальные даты и сортируем */
   const set = new Set((js.results || []).map(o => o.expiration_date));
@@ -117,7 +120,7 @@ async function fetchExpirations(tkr){
 
 /* 2. Цепочка путов на выбранную дату */
 async function fetchChain(tkr, isoDate){
-  const base = `https://api.polygon.io/v3/reference/options/contracts`
+const base = `https://api.polygon.io/v3/reference/options/contracts`
              + `?underlying_ticker=${tkr}`
              + `&expiration_date=${isoDate}`
              + `&contract_type=put`
@@ -125,10 +128,13 @@ async function fetchChain(tkr, isoDate){
              + `&limit=1000`
              + `&apiKey=${POLY_KEY}`;
 
-  const url = 'https://api.allorigins.win/raw?disableCache=true&url='
-            + encodeURIComponent(base);
+  const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+              + encodeURIComponent(base);
 
-  const js = await fetch(url).then(r => r.json()).catch(() => ({}));
+  let js = await fetch(base).then(r => r.json()).catch(() => null);
+  if(!js){
+    js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
+  }
   return js.results || [];
 }
 
@@ -142,10 +148,13 @@ async function fetchRiskFree(){
              + `?series_id=DGS3MO&api_key=${FRED_KEY}`
              + '&file_type=json&limit=1&sort_order=desc';
 
-  const url = 'https://api.allorigins.win/raw?disableCache=true&url='
-          + encodeURIComponent(base);
+  const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+              + encodeURIComponent(base);
 
-  const js = await fetch(url).then(r => r.json()).catch(() => null);
+ let js = await fetch(base).then(r => r.json()).catch(() => null);
+  if(!js){
+    js = await fetch(proxy).then(r => r.json()).catch(() => null);
+  }
   if(!js) return null;
 
   const v = parseFloat(js.observations?.[0]?.value);
