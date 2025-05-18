@@ -93,7 +93,7 @@ const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0
 async function fetchExpirations(tkr){
   const url = `https://api.polygon.io/v3/reference/options/contracts`
             + `?underlying_ticker=${tkr}`
-            + `&limit=1000`
+            + `&limit=100`
             + `&apiKey=${POLY_KEY}`;
 
   const js  = await fetch(url).then(r => r.json());
@@ -105,15 +105,17 @@ async function fetchExpirations(tkr){
 
 /* 2. Цепочка путов на выбранную дату */
 async function fetchChain(tkr, isoDate){
-  const url = `https://api.polygon.io/v3/snapshot/options/${tkr}`
-            + `?expiration_date=${isoDate}`
+  const url = `https://api.polygon.io/v3/reference/options/contracts`
+            + `?underlying_ticker=${tkr}`
+            + `&expiration_date=${isoDate}`
             + `&contract_type=put`
-            + `&limit=1000`
+            + `&limit=100`
             + `&apiKey=${POLY_KEY}`;
 
   const js = await fetch(url).then(r => r.json());
   return js.results || [];
 }
+
 
 /*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
@@ -166,7 +168,7 @@ expSel.addEventListener('change', async e => {
 
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
-    strike: c.details?.strike_price || c.strike_price,
+    strike: c.strike_price,
     iv:     c.implied_volatility || 0
   }));
   // --------------------------------------------
@@ -195,7 +197,7 @@ document.getElementById('plotBtn').onclick=async()=>{
   const iso=expSel.value; const tkr=tickerEl.value.trim().toUpperCase();
   if(!iso||!tkr) return;
   const chain=await fetchChain(tkr,iso);
-const strikes = chain.map(c => c.details?.strike_price || c.strike_price);
+  const strikes = chain.map(c => c.strike_price);
   const ivs     = chain.map(c => (c.implied_volatility || 0) * 100);
   const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
   if(chart) chart.destroy();
