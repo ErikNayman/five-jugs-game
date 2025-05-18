@@ -95,17 +95,20 @@ function getIV(opt){
       ?? opt.implied_volatility
       ?? 0;
 }
-  
+
 /*──────────── API fetchers (Polygon Basic) ───────────*/
 
 /* 1. Все даты экспираций */
 async function fetchExpirations(tkr){
-  const url = `https://api.polygon.io/v3/reference/options/contracts`
-            + `?underlying_ticker=${tkr}`
-            + `&limit=1000`
-            + `&apiKey=${POLY_KEY}`;
+  const base = `https://api.polygon.io/v3/reference/options/contracts`
+             + `?underlying_ticker=${tkr}`
+             + `&limit=1000`
+             + `&apiKey=${POLY_KEY}`;
+  
+  const url = 'https://api.allorigins.win/raw?disableCache=true&url='
+            + encodeURIComponent(base);
 
-  const js  = await fetch(url).then(r => r.json());
+  const js  = await fetch(url).then(r => r.json()).catch(() => ({}));
 
   /* собираем уникальные даты и сортируем */
   const set = new Set((js.results || []).map(o => o.expiration_date));
@@ -114,15 +117,18 @@ async function fetchExpirations(tkr){
 
 /* 2. Цепочка путов на выбранную дату */
 async function fetchChain(tkr, isoDate){
-  const url = `https://api.polygon.io/v3/reference/options/contracts`
-            + `?underlying_ticker=${tkr}`
-            + `&expiration_date=${isoDate}`
-            + `&contract_type=put`
-            + `&includeGreeks=true`
-            + `&limit=1000`
-            + `&apiKey=${POLY_KEY}`;
+  const base = `https://api.polygon.io/v3/reference/options/contracts`
+             + `?underlying_ticker=${tkr}`
+             + `&expiration_date=${isoDate}`
+             + `&contract_type=put`
+             + `&includeGreeks=true`
+             + `&limit=1000`
+             + `&apiKey=${POLY_KEY}`;
 
-  const js = await fetch(url).then(r => r.json());
+  const url = 'https://api.allorigins.win/raw?disableCache=true&url='
+            + encodeURIComponent(base);
+
+  const js = await fetch(url).then(r => r.json()).catch(() => ({}));
   return js.results || [];
 }
 
