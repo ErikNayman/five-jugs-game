@@ -87,6 +87,15 @@ const FRED_KEY = 'a0e616b9949b55af5e10c51f9a3bf272';    // ← опционал�
 const todaySec = () => Date.now()/1000;
 const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0);
 
+  // universal IV extractor supporting various Polygon fields
+function getIV(opt){
+  return opt.greeks?.mid_iv
+      ?? opt.greeks?.implied_volatility
+      ?? opt.iv
+      ?? opt.implied_volatility
+      ?? 0;
+}
+  
 /*──────────── API fetchers (Polygon Basic) ───────────*/
 
 /* 1. Все даты экспираций */
