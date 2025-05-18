@@ -93,7 +93,7 @@ const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0
 async function fetchExpirations(tkr){
   const url = `https://api.polygon.io/v3/reference/options/contracts`
             + `?underlying_ticker=${tkr}`
-            + `&limit=100`
+            + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
   const js  = await fetch(url).then(r => r.json());
@@ -109,7 +109,7 @@ async function fetchChain(tkr, isoDate){
             + `?expiration_date=${isoDate}`
             + `&contract_type=put`
             + `&includeGreeks=true`
-            + `&limit=100`
+            + `&limit=1000`
             + `&apiKey=${POLY_KEY}`;
 
   const js = await fetch(url).then(r => r.json());
