@@ -90,6 +90,7 @@ const isoToDays = iso => Math.max(Math.round((new Date(iso)-Date.now())/864e5),0
 function getIV(opt){
   return opt.greeks?.mid_iv
       ?? opt.greeks?.implied_volatility
+      ?? opt.day?.implied_volatility
       ?? opt.iv
       ?? opt.implied_volatility
       ?? 0;
@@ -142,8 +143,8 @@ const base = `https://api.polygon.io/v3/reference/options/contracts`
 }
 
 /* 3. Снэпшот по тикеру контракта */
-async function fetchSnapshot(contractTicker){
-  const base = `https://api.polygon.io/v3/snapshot/options/${contractTicker}`
+async function fetchSnapshot(underlying, contractTicker){
+  const base = `https://api.polygon.io/v3/snapshot/options/${underlying}/${contractTicker}`
              + `?apiKey=${POLY_KEY}&greeks=true`;
 
   const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
@@ -210,7 +211,6 @@ expSel.addEventListener('change', async e => {
     strikeSel.innerHTML += `<option value="${p.strike}" data-contract="${p.contract}" data-iv="${p.iv}">${p.strike}</option>`;
   });
 });
-
 
 
   /*──────────── Show IV (fills K, sigma, r, days) ───────────*/
