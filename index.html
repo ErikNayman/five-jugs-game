@@ -144,9 +144,9 @@ const base = `https://api.polygon.io/v3/reference/options/contracts`
   }));
 }
 
-/* 3. Снэпшот по тикеру контракта */
-async function fetchSnapshot(underlying, contractTicker){
-  const base = `https://api.polygon.io/v3/snapshot/options/${underlying}/${contractTicker}`
+/* 3. Снэпшот по тикеру контракта (нужен тикер базового актива) */
+async function fetchSnapshot(underlyingTicker, contractTicker){
+  const base = `https://api.polygon.io/v3/snapshot/options/${underlyingTicker}/${contractTicker}`
              + `?apiKey=${POLY_KEY}&greeks=true`;
 
   const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
