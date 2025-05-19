@@ -116,11 +116,10 @@ async function fetchExpirations(tkr){
 
 /* 2. Цепочка путов на выбранную дату */
 async function fetchChain(tkr, isoDate){
-const base = `https://api.polygon.io/v3/reference/options/contracts`
-             + `?underlying_ticker=${tkr}`
-             + `&expiration_date=${isoDate}`
+const base = `https://api.polygon.io/v3/snapshot/options/${tkr}`
+             + `?expiration_date=${isoDate}`
              + `&contract_type=put`
-             + `&includeGreeks=true`
+             + `&greeks=true`
              + `&limit=1000`
              + `&apiKey=${POLY_KEY}`;
 
