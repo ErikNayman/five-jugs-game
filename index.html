@@ -189,26 +189,42 @@ expSel.addEventListener('change', async e => {
   // ------ формируем массив объектов {strike, iv}
   const puts = chain.map(c => ({
     strike: c.strike_price,
-    iv:     getIV(c)
+    iv:     getIV(c),
+    contract: c.ticker
   }));
   // --------------------------------------------
 
   strikeSel.innerHTML = '';
   puts.forEach(p => {
-  strikeSel.innerHTML += `<option value="${p.strike}" data-iv="${p.iv}">
-                            ${p.strike} (IV ${(p.iv*100).toFixed(1)}%)
-                          </option>`;
+    strikeSel.innerHTML += `<option value="${p.strike}" data-contract="${p.contract}" data-iv="${p.iv}">${p.strike}</option>`;
   });
   strikeSel.dispatchEvent(new Event('change'));
 });
 
 
 /*──────────── strike select → K & σ ───────────*/
-strikeSel.addEventListener('change',e=>{
-  const opt=e.target.selectedOptions[0];
-  if(!opt) return;
-  document.getElementById('K').value=opt.value;
-  document.getElementById('sigma').value=parseFloat(opt.dataset.iv||0).toFixed(4);
+strikeSel.addEventListener('change', async e => {
+  const opt = e.target.selectedOptions[0];
+  if (!opt) return;
+  document.getElementById('K').value = opt.value;
+
+  const tkr = tickerEl.value.trim().toUpperCase();
+  const contract = opt.dataset.contract;
+  let iv = parseFloat(opt.dataset.iv || 0);
+
+  if (tkr && contract) {
+    const base = `https://api.polygon.io/v3/snapshot/options/${tkr}/${contract}?greeks=true&apiKey=${POLY_KEY}`;
+    const proxy = 'https://api.allorigins.win/raw?disableCache=true&url=' + encodeURIComponent(base);
+    let js = await fetch(base).then(r => r.json()).catch(() => null);
+    if (!js) {
+      js = await fetch(proxy).then(r => r.json()).catch(() => null);
+    }
+    if (js && js.results) {
+      iv = getIV(js.results);
+    }
+  }
+
+  document.getElementById('sigma').value = parseFloat(iv).toFixed(4);
 });
 
 
