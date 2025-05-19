@@ -66,8 +66,11 @@
       </label>
     </div>
 
-    
 
+    
+    <!-- show IV -->
+    <button id="ivBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-3 font-semibold">Show IV</button>
+    
     <!-- calculate -->
     <button id="calcBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 font-semibold">Calculate</button>
     <div id="output" class="text-lg font-mono whitespace-pre-wrap"></div>
@@ -130,7 +133,7 @@ const base = `https://api.polygon.io/v3/snapshot/options/${tkr}`
   if(!js){
     js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
   }
-  /* преобразуем в [{strike, contract, iv}, ...] */
+    /* преобразуем в [{strike, contract, iv}, ...] */
   return (js.results || []).map(o => ({
     strike:   o.strike_price,
     contract: o.ticker,
@@ -152,7 +155,6 @@ async function fetchSnapshot(contractTicker){
   }
   return js && js.results ? js.results : null;
 }
-
 
 /*──────────── risk‑free FRED ───────────*/
 async function fetchRiskFree(){
@@ -180,14 +182,13 @@ async function fetchRiskFree(){
 const tickerEl=document.getElementById('ticker');
 const expSel  =document.getElementById('expSelect');
 const strikeSel=document.getElementById('strikeSelect');
+const ivBtn   =document.getElementById('ivBtn');
 
-/*──────────── ticker change → expirations ───────────*/
+  
+  /*──────────── ticker change → expirations ───────────*/
 tickerEl.addEventListener('change',async e=>{
   const tkr=e.target.value.trim().toUpperCase();
   if(!tkr) return;
-
-  // risk‑free auto
-  fetchRiskFree().then(v=>{if(v!==null) document.getElementById('r').value=v.toFixed(4);});
 
   // expirations
   const dates=await fetchExpirations(tkr);
@@ -196,13 +197,11 @@ tickerEl.addEventListener('change',async e=>{
   expSel.dispatchEvent(new Event('change'));
 });
 
-/*──────── expiration → strikes + days ──────────*/
+/*──────── expiration → strikes ──────────*/
 expSel.addEventListener('change', async e => {
   const iso = e.target.value;
   const tkr = tickerEl.value.trim().toUpperCase();
   if (!iso || !tkr) return;
-
-  document.getElementById('days').value = isoToDays(iso);
 
   const puts = await fetchChain(tkr, iso);   // уже содержит strike/contract/iv
 
@@ -210,31 +209,40 @@ expSel.addEventListener('change', async e => {
   puts.forEach(p => {
     strikeSel.innerHTML += `<option value="${p.strike}" data-contract="${p.contract}" data-iv="${p.iv}">${p.strike}</option>`;
   });
-  strikeSel.dispatchEvent(new Event('change'));
 });
 
 
-/*──────────── strike select → K & σ ───────────*/
-strikeSel.addEventListener('change', async e => {
-  const opt = e.target.selectedOptions[0];
-  if (!opt) return;
-  document.getElementById('K').value = opt.value;
 
+  /*──────────── Show IV (fills K, sigma, r, days) ───────────*/
+ivBtn.addEventListener('click', async () => {
+  const tkr = tickerEl.value.trim().toUpperCase();
+  const iso = expSel.value;
+  const opt = strikeSel.selectedOptions[0];
+  if(!tkr || !iso || !opt){
+    alert('Select ticker, expiration and strike');
+    return;
+  }
+
+  document.getElementById('days').value = isoToDays(iso);document.getElementById('K').value = opt.value;
+  
   const contract = opt.dataset.contract;
   let iv = parseFloat(opt.dataset.iv || 0);
 
-    if (contract) {
+    if(contract){
     const snap = await fetchSnapshot(contract);
-    if (snap) {
+    if(snap){
       iv = getIV(snap);
     }
   }
-
   document.getElementById('sigma').value = parseFloat(iv).toFixed(4);
+
+  const rVal = await fetchRiskFree();
+  if(rVal !== null) document.getElementById('r').value = rVal.toFixed(4);
 });
 
 
 
+  
 /*──────────── option pricers (same as before) ───────────*/
 function americanPutCRR(S,K,T,r,q,sigma,n){
   n=Math.max(1,Math.floor(n||1));
