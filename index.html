@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <title>Option RUO Calculator – Polygon Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>canvas{background:#f8fafc;border-radius:12px}</style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8 space-y-6">
@@ -68,9 +66,7 @@
       </label>
     </div>
 
-    <!-- IV skew chart optional -->
-    <button id="plotBtn" class="w-full bg-slate-600 hover:bg-slate-700 text-white rounded-lg py-2.5 font-medium">Show IV Skew</button>
-    <canvas id="ivChart" height="250" class="hidden"></canvas>
+    
 
     <!-- calculate -->
     <button id="calcBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 font-semibold">Calculate</button>
@@ -216,18 +212,7 @@ strikeSel.addEventListener('change',e=>{
   document.getElementById('sigma').value=parseFloat(opt.dataset.iv||0).toFixed(4);
 });
 
-/*──────────── IV skew chart ───────────*/
-let chart=null;
-document.getElementById('plotBtn').onclick=async()=>{
-  const iso=expSel.value; const tkr=tickerEl.value.trim().toUpperCase();
-  if(!iso||!tkr) return;
-  const chain=await fetchChain(tkr,iso);
-  const strikes = chain.map(c => c.strike_price);
-  const ivs     = chain.map(c => (getIV(c) * 100));
-  const ctx=document.getElementById('ivChart'); ctx.classList.remove('hidden');
-  if(chart) chart.destroy();
-  chart=new Chart(ctx,{type:'line',data:{labels:strikes,datasets:[{data:ivs,fill:false}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Strike'}},y:{title:{display:true,text:'IV %'}}}}});
-};
+
 
 /*──────────── option pricers (same as before) ───────────*/
 function americanPutCRR(S,K,T,r,q,sigma,n){
