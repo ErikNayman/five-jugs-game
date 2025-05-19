@@ -130,7 +130,27 @@ const base = `https://api.polygon.io/v3/snapshot/options/${tkr}`
   if(!js){
     js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
   }
-  return js.results || [];
+  /* преобразуем в [{strike, contract, iv}, ...] */
+  return (js.results || []).map(o => ({
+    strike:   o.strike_price,
+    contract: o.ticker,
+    iv:       getIV(o)
+  }));
+}
+
+/* 3. Снэпшот по тикеру контракта */
+async function fetchSnapshot(contractTicker){
+  const base = `https://api.polygon.io/v3/snapshot/options/${contractTicker}`
+             + `?apiKey=${POLY_KEY}&greeks=true`;
+
+  const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+              + encodeURIComponent(base);
+
+  let js = await fetch(base).then(r => r.json()).catch(() => null);
+  if(!js){
+    js = await fetch(proxy).then(r => r.json()).catch(() => null);
+  }
+  return js && js.results ? js.results : null;
 }
 
 
@@ -184,15 +204,7 @@ expSel.addEventListener('change', async e => {
 
   document.getElementById('days').value = isoToDays(iso);
 
-  const chain = await fetchChain(tkr, iso);   // уже contains only puts
-
-  // ------ формируем массив объектов {strike, iv}
-  const puts = chain.map(c => ({
-    strike: c.strike_price,
-    iv:     getIV(c),
-    contract: c.ticker
-  }));
-  // --------------------------------------------
+  const puts = await fetchChain(tkr, iso);   // уже содержит strike/contract/iv
 
   strikeSel.innerHTML = '';
   puts.forEach(p => {
@@ -208,19 +220,13 @@ strikeSel.addEventListener('change', async e => {
   if (!opt) return;
   document.getElementById('K').value = opt.value;
 
-  const tkr = tickerEl.value.trim().toUpperCase();
   const contract = opt.dataset.contract;
   let iv = parseFloat(opt.dataset.iv || 0);
 
-  if (tkr && contract) {
-    const base = `https://api.polygon.io/v3/snapshot/options/${tkr}/${contract}?greeks=true&apiKey=${POLY_KEY}`;
-    const proxy = 'https://api.allorigins.win/raw?disableCache=true&url=' + encodeURIComponent(base);
-    let js = await fetch(base).then(r => r.json()).catch(() => null);
-    if (!js) {
-      js = await fetch(proxy).then(r => r.json()).catch(() => null);
-    }
-    if (js && js.results) {
-      iv = getIV(js.results);
+    if (contract) {
+    const snap = await fetchSnapshot(contract);
+    if (snap) {
+      iv = getIV(snap);
     }
   }
 
