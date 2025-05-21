@@ -278,11 +278,10 @@ ivBtn.addEventListener('click', async () => {
 
   const rVal = await fetchRiskFree();
   if(rVal !== null) document.getElementById('r').value = rVal.toFixed(4);
-});
+
   const qVal = await fetchDividendYield(tkr);
   if(qVal !== null) document.getElementById('q').value = qVal.toFixed(4);
-
-
+});
   
 /*──────────── option pricers (same as before) ───────────*/
 function americanPutCRR(S,K,T,r,q,sigma,n){
