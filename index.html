@@ -7,7 +7,7 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-8 space-y-6">
-    <h1 class="text-2xl font-semibold text-center">American Put — «Missed Upside» (RUO) — Polygon</h1>
+        <h1 id="title" class="text-2xl font-semibold text-center">American Put — «Missed Upside» (RUO) — Polygon</h1>
 
     <!-- ╔═══ AUTO-FILL (Polygon) ═══╗ -->
     <div class="grid grid-cols-2 gap-4">
@@ -16,13 +16,21 @@
         <input id="ticker" placeholder="AAPL" class="border rounded-lg px-3 py-2 uppercase tracking-wide">
       </label>
 
+     <label class="flex flex-col">
+        <span class="text-sm">Option type</span>
+        <select id="optionType" class="border rounded-lg px-3 py-2">
+          <option value="put">Put</option>
+          <option value="call">Call</option>
+        </select>
+      </label>
+      
       <label class="flex flex-col">
         <span class="text-sm">Expiration date</span>
         <select id="expSelect" class="border rounded-lg px-3 py-2"></select>
       </label>
 
       <label class="flex flex-col">
-        <span class="text-sm">Strike (put)</span>
+        <span id="strikeLabel" class="text-sm">Strike (put)</span>
         <select id="strikeSelect" class="border rounded-lg px-3 py-2"></select>
       </label>
 
@@ -120,12 +128,12 @@ async function fetchExpirations(tkr){
   return Array.from(set).sort();     // ['2024-10-18', '2024-11-15', …]
 }
 
-/* 2. Цепочка путов на выбранную дату */
-async function fetchChain(tkr, isoDate){
+/* 2. Цепочка опционов на выбранную дату */
+async function fetchChain(tkr, isoDate, type){
 const base = `https://api.polygon.io/v3/reference/options/contracts`
              + `?underlying_ticker=${tkr}`
              + `&expiration_date=${isoDate}`
-             + `&contract_type=put`
+             + `&contract_type=${type}`
              + `&limit=999`
              + `&apiKey=${POLY_KEY}`;
 
@@ -223,7 +231,9 @@ const tickerEl=document.getElementById('ticker');
 const expSel  =document.getElementById('expSelect');
 const strikeSel=document.getElementById('strikeSelect');
 const ivBtn   =document.getElementById('ivBtn');
-
+const typeSel =document.getElementById('optionType');
+const strikeLabel=document.getElementById('strikeLabel');
+const titleEl=document.getElementById('title');
   
   /*──────────── ticker change → expirations ───────────*/
 tickerEl.addEventListener('change',async e=>{
@@ -237,16 +247,24 @@ tickerEl.addEventListener('change',async e=>{
   expSel.dispatchEvent(new Event('change'));
 });
 
-/*──────── expiration → strikes ──────────*/
+/*──────── option type change ────────*/
+typeSel.addEventListener('change',()=>{
+  strikeLabel.textContent = `Strike (${typeSel.value})`;
+  titleEl.textContent = `American ${typeSel.value.charAt(0).toUpperCase()+typeSel.value.slice(1)} — «Missed Upside» (RUO) — Polygon`;
+  expSel.dispatchEvent(new Event('change'));
+});
+
+  
+  /*──────── expiration → strikes ──────────*/
 expSel.addEventListener('change', async e => {
   const iso = e.target.value;
   const tkr = tickerEl.value.trim().toUpperCase();
   if (!iso || !tkr) return;
 
-  const puts = await fetchChain(tkr, iso);   // уже содержит strike/contract/iv
-
+  const chain = await fetchChain(tkr, iso, typeSel.value);   // уже содержит strike/contract/iv
+  
   strikeSel.innerHTML = '';
-  puts.forEach(p => {
+  chain.forEach(p => {
     strikeSel.innerHTML += `<option value="${p.strike}" data-contract="${p.contract}" data-iv="${p.iv}">${p.strike}</option>`;
   });
 });
@@ -300,7 +318,23 @@ function americanPutCRR(S,K,T,r,q,sigma,n){
   }
   return v[0];
 }
-function randn(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function americanCallCRR(S,K,T,r,q,sigma,n){
+  n=Math.max(1,Math.floor(n||1));
+  const dt=T/n,u=Math.exp(sigma*Math.sqrt(dt)),d=1/u,
+        disc=Math.exp(-r*dt),p=(Math.exp((r-q)*dt)-d)/(u-d);
+  const v=Array(n+1);
+  let Su=S*Math.pow(u,n);
+  for(let i=0;i<=n;i++){v[i]=Math.max(Su-K,0);Su*=d*d;}
+  for(let s=n-1;s>=0;s--){
+    for(let i=0;i<=s;i++){
+      const cont=disc*(p*v[i+1]+(1-p)*v[i]);
+      const early=Math.max(S*Math.pow(u,s-2*i)-K,0);
+      v[i]=Math.max(cont,early);
+    }
+  }
+  return v[0];
+}
+  function randn(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
 function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){
   const tot=Math.max(1,Math.ceil(T*stepsPerYear)),
         dt=T/tot,
@@ -314,6 +348,22 @@ function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){
       if(!hit&&S<=K)hit=true;
     }
     if(hit&&S>K){sum+=S-K;cnt++;}
+  }
+  return cnt?sum/N:0;
+}
+function ruoCall(S0,K,T,r,q,sigma,N,stepsPerYear){
+  const tot=Math.max(1,Math.ceil(T*stepsPerYear)),
+        dt=T/tot,
+        drift=(r-q-0.5*sigma**2)*dt,
+        diff=sigma*Math.sqrt(dt);
+  let sum=0,cnt=0;
+  for(let i=0;i<N;i++){
+    let S=S0,hit=false;
+    for(let s=0;s<tot;s++){
+      S*=Math.exp(drift+diff*randn());
+      if(!hit&&S>=K)hit=true;
+    }
+    if(hit&&S<K){sum+=K-S;cnt++;}
   }
   return cnt?sum/N:0;
 }
@@ -334,11 +384,19 @@ document.getElementById('calcBtn').onclick=()=>{
       q = g('q')     || 0.02,      // default 2 %
       N=g('N'),steps=g('steps'),nTree=g('priceSteps');
     if(!K||!days||!sigma){alert('Missing strike / sigma / days');return;}
-    const T=days/365;
-    const amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
-    const ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
-    const fair=amer+ruo;
-    document.getElementById('output').textContent=`Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}\nRUO (missed-upside):    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       ${fair.toFixed(4)}`;
+    let amer,ruo,fair,msg;
+    if(typeSel.value==='call'){
+      amer=americanCallCRR(S0,K,T,r,q,sigma,nTree);
+      ruo=ruoCall(S0,K,T,r,q,sigma,N,steps);
+      fair=amer+ruo;
+      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican call (CRR):     ${amer.toFixed(4)}\nRUO (missed-downside): ${ruo.toFixed(4)}\n———————————————\nFair call premium:       ${fair.toFixed(4)}`;
+    } else {
+      amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
+      ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
+      fair=amer+ruo;
+      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}\nRUO (missed-upside):    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       ${fair.toFixed(4)}`;
+    }
+    document.getElementById('output').textContent=msg;
   });
 };
 </script>
