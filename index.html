@@ -384,6 +384,7 @@ document.getElementById('calcBtn').onclick=()=>{
       q = g('q')     || 0.02,      // default 2 %
       N=g('N'),steps=g('steps'),nTree=g('priceSteps');
     if(!K||!days||!sigma){alert('Missing strike / sigma / days');return;}
+    const T=days/365;
     let amer,ruo,fair,msg;
     if(typeSel.value==='call'){
       amer=americanCallCRR(S0,K,T,r,q,sigma,nTree);
