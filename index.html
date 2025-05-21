@@ -232,7 +232,7 @@ ivBtn.addEventListener('click', async () => {
   let iv = parseFloat(opt.dataset.iv || 0);
 
     if(contract){
-    const snap = await fetchSnapshot(contract);
+    const snap = await fetchSnapshot(tkr, contract);
     if(snap){
       iv = getIV(snap);
     }
