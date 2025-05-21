@@ -257,7 +257,7 @@ function americanPutCRR(S,K,T,r,q,sigma,n){
   for(let s=n-1;s>=0;s--){
     for(let i=0;i<=s;i++){
       const cont=disc*(p*v[i]+(1-p)*v[i+1]);
-      const early=Math.max(K-S*Math.pow(u,2*i-s),0);
+      const early=Math.max(K-S*Math.pow(u,s-2*i),0);
       v[i]=Math.max(cont,early);
     }
   }
