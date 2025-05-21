@@ -50,8 +50,8 @@
       </label>
 
       <label class="flex flex-col">
-        <span class="text-sm">Dividend yield q (manual)</span>
-        <input id="q" value="0" class="border rounded-lg px-3 py-2">
+        <span class="text-sm">Dividend yield q (auto Polygon)</span>
+        <input id="q" value="0" class="border rounded-lg px-3 py-2 bg-slate-100">
       </label>
 
       <!-- simulation fine‑tune -->
@@ -181,6 +181,43 @@ async function fetchRiskFree(){
   return isNaN(v) ? null : v/100;   // в десятичный вид
 }
 
+/*──────────── dividend yield (Polygon) ───────────*/
+async function fetchDividendYield(tkr){
+  const base = `https://api.polygon.io/v3/reference/dividends?ticker=${tkr}&limit=120&apiKey=${POLY_KEY}`;
+  const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+                + encodeURIComponent(base);
+
+  let js = await fetch(base).then(r => r.json()).catch(() => null);
+  if(!js){
+    js = await fetch(proxy).then(r => r.json()).catch(() => null);
+  }
+  if(!js) return null;
+
+  const now = Date.now();
+  const yr = 365*864e5;
+  let sum = 0;
+  (js.results || []).forEach(d => {
+    const ds = d.payment_date || d.pay_date || d.ex_dividend_date || d.exDate;
+    const ms = ds ? Date.parse(ds) : NaN;
+    if(!isNaN(ms) && ms <= now && now - ms <= yr){
+      const amt = parseFloat(d.cash_amount ?? d.amount);
+      if(!isNaN(amt)) sum += amt;
+    }
+  });
+  if(sum === 0) return 0;
+
+  const quoteUrl = `https://api.polygon.io/v2/aggs/ticker/${tkr}/prev?adjusted=true&apiKey=${POLY_KEY}`;
+  const quoteProxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+                     + encodeURIComponent(quoteUrl);
+
+  let qjs = await fetch(quoteUrl).then(r => r.json()).catch(() => null);
+  if(!qjs){
+    qjs = await fetch(quoteProxy).then(r => r.json()).catch(() => null);
+  }
+  const price = qjs && qjs.results && qjs.results[0] && qjs.results[0].c;
+  return price ? sum/price : null;
+}
+
 /*──────────── DOM elements ───────────*/
 const tickerEl=document.getElementById('ticker');
 const expSel  =document.getElementById('expSelect');
@@ -242,7 +279,8 @@ ivBtn.addEventListener('click', async () => {
   const rVal = await fetchRiskFree();
   if(rVal !== null) document.getElementById('r').value = rVal.toFixed(4);
 });
-
+  const qVal = await fetchDividendYield(tkr);
+  if(qVal !== null) document.getElementById('q').value = qVal.toFixed(4);
 
 
   
