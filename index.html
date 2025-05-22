@@ -390,12 +390,16 @@ document.getElementById('calcBtn').onclick=()=>{
       amer=americanCallCRR(S0,K,T,r,q,sigma,nTree);
       ruo=ruoCall(S0,K,T,r,q,sigma,N,steps);
       fair=amer+ruo;
-      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican call (CRR):     ${amer.toFixed(4)}\nRUO (missed-downside): ${ruo.toFixed(4)}\n———————————————\nFair call premium:       ${fair.toFixed(4)}`;
+          const pCrr=(amer/fair*100).toFixed(1);
+      const pRuo=(ruo /fair*100).toFixed(1);
+      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican call (CRR):     ${amer.toFixed(4)}  (${pCrr}%)\nRUO (missed-downside): ${ruo.toFixed(4)}  (${pRuo}%)\n———————————————\nFair call premium:       ${fair.toFixed(4)}`;
     } else {
       amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
       ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
       fair=amer+ruo;
-      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}\nRUO (missed-upside):    ${ruo.toFixed(4)}\n———————————————\nFair put premium:       ${fair.toFixed(4)}`;
+    const pCrr=(amer/fair*100).toFixed(1);
+      const pRuo=(ruo /fair*100).toFixed(1);
+      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}  (${pCrr}%)\nRUO (missed-upside):    ${ruo.toFixed(4)}  (${pRuo}%)\n———————————————\nFair put premium:       ${fair.toFixed(4)}`;    
     }
     document.getElementById('output').textContent=msg;
   });
