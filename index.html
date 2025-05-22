@@ -112,7 +112,7 @@ function getIV(opt){
 async function fetchExpirations(tkr){
   const base = `https://api.polygon.io/v3/reference/options/contracts`
              + `?underlying_ticker=${tkr}`
-             + `&limit=999`
+             + `&limit=9999`
              + `&apiKey=${POLY_KEY}`;
 
   const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
@@ -134,7 +134,7 @@ const base = `https://api.polygon.io/v3/reference/options/contracts`
              + `?underlying_ticker=${tkr}`
              + `&expiration_date=${isoDate}`
              + `&contract_type=${type}`
-             + `&limit=999`
+             + `&limit=9999`
              + `&apiKey=${POLY_KEY}`;
 
   const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
