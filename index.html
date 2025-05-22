@@ -110,28 +110,21 @@ function getIV(opt){
 
 /* 1. Все даты экспираций */
 async function fetchExpirations(tkr){
-  let url = `https://api.polygon.io/v3/reference/options/contracts`
-           + `?underlying_ticker=${tkr}`
-           + `&limit=999`
-           + `&apiKey=${POLY_KEY}`;
+  const base = `https://api.polygon.io/v3/reference/options/contracts`
+             + `?underlying_ticker=${tkr}`
+             + `&limit=999`
+             + `&apiKey=${POLY_KEY}`;
 
-  const set = new Set();
-  while(url){
-    const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
-                + encodeURIComponent(url);
+  const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+              + encodeURIComponent(base);
 
-    let js = await fetch(url).then(r => r.json()).catch(() => null);
-    if(!js){
-      js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
-    }
-    
-    (js.results || []).forEach(o => set.add(o.expiration_date));
-    url = js.next_url || null;
-    if(url && POLY_KEY && !/apiKey=/.test(url)){
-      url += `${url.includes('?') ? '&' : '?'}apiKey=${POLY_KEY}`;
-    }
+  let js = await fetch(base).then(r => r.json()).catch(() => null);
+  if(!js){
+    js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
   }
 
+  /* собираем уникальные даты и сортируем */
+  const set = new Set((js.results || []).map(o => o.expiration_date));
   return Array.from(set).sort();     // ['2024-10-18', '2024-11-15', …]
 }
 
@@ -144,25 +137,15 @@ const base = `https://api.polygon.io/v3/reference/options/contracts`
              + `&limit=999`
              + `&apiKey=${POLY_KEY}`;
 
-  let url = base;
-  const list = [];
-  while(url){
-    const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
-                + encodeURIComponent(url);
+  const proxy = 'https://api.allorigins.win/raw?disableCache=true&url='
+              + encodeURIComponent(base);
 
-let js = await fetch(url).then(r => r.json()).catch(() => null);
-    if(!js){
-      js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
-    }
-    list.push(...(js.results || []));
-    url = js.next_url || null;
-    if(url && POLY_KEY && !/apiKey=/.test(url)){
-      url += `${url.includes('?') ? '&' : '?'}apiKey=${POLY_KEY}`;
-    }
+  let js = await fetch(base).then(r => r.json()).catch(() => null);
+  if(!js){
+    js = await fetch(proxy).then(r => r.json()).catch(() => ({}));
   }
-  
     /* преобразуем в [{strike, contract, iv}, ...] */
-return list.map(o => ({
+  return (js.results || []).map(o => ({
     strike:   o.strike_price,
     contract: o.ticker,
     iv:       0
