@@ -84,6 +84,7 @@
     <!-- calculate -->
     <button id="calcBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 font-semibold">Calculate</button>
     <div id="output" class="text-lg font-mono whitespace-pre-wrap"></div>
+    <div id="advise" class="mt-4 text-sm text-slate-600 italic"></div>
   </div>
 
 <script>
@@ -402,6 +403,14 @@ document.getElementById('calcBtn').onclick=()=>{
       ruoObj= ruoCall(S0,K,T,r,q,sigma,N,steps);          // ★
       fair  = amer + ruoObj.premium;                      // ★
       msg = `Underlying S0:          ${S0.toFixed(2)}\nAmerican call (CRR):     ${amer.toFixed(4)}\nRUO (missed-downside):   ${ruoObj.premium.toFixed(4)}\nCollapse freq:           ${(ruoObj.rate*100).toFixed(1)} %\n———————————————\nFair call premium:       ${fair.toFixed(4)}`;
+    const buffer = [];
+if(typeSel.value==='put' && fair*1.15 < marketPrice)
+    buffer.push('▶ Рыночная премия > fair×1.15 — SELL candidate');
+if(typeSel.value==='call' && fair*1.08 < marketPrice)
+    buffer.push('▶ Рыночная премия > fair×1.08 — SELL candidate');
+if(ruoObj.rate>0.3) buffer.push('⚠ Высокий риск коллапса: будьте готовы рулить');
+
+document.getElementById('advise').textContent = buffer.join('  |  ');
     } else {
       amer  = americanPutCRR(S0,K,T,r,q,sigma,nTree);
       ruoObj= ruoPut(S0,K,T,r,q,sigma,N,steps);           // ★
