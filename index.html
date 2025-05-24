@@ -336,37 +336,48 @@ function americanCallCRR(S,K,T,r,q,sigma,n){
 }
   function randn(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
 function ruoPut(S0,K,T,r,q,sigma,N,stepsPerYear){
-  const tot=Math.max(1,Math.ceil(T*stepsPerYear)),
-        dt=T/tot,
-        drift=(r-q-0.5*sigma**2)*dt,
-        diff=sigma*Math.sqrt(dt);
-  let sum=0,cnt=0;
-  for(let i=0;i<N;i++){
-    let S=S0,hit=false;
+  const tot = Math.max(1, Math.ceil(T*stepsPerYear)),
+        dt  = T/tot,
+        drift = (r-q-0.5*sigma*sigma)*dt,
+        diff  = sigma*Math.sqrt(dt);
+
+  let payoffSum = 0,  collapseCnt = 0;
+    for(let i=0;i<N;i++){
+    let S = S0, hit = false;
     for(let s=0;s<tot;s++){
-      S*=Math.exp(drift+diff*randn());
-      if(!hit&&S<=K)hit=true;
+       S *= Math.exp(drift + diff*randn());
+      if(!hit && S <= K) hit = true;          // «кот умер»
     }
-    if(hit&&S>K){sum+=S-K;cnt++;}
+    if(hit && S > K){                         // «кот ожил»
+      collapseCnt++;
+      payoffSum += S - K;                     // прежний логик RUO-put
+    }
   }
-  return cnt?sum/N:0;
+  return { premium: collapseCnt ? payoffSum/N : 0,
+           rate    : collapseCnt / N };       // ← доля коллапсов
 }
 function ruoCall(S0,K,T,r,q,sigma,N,stepsPerYear){
-  const tot=Math.max(1,Math.ceil(T*stepsPerYear)),
-        dt=T/tot,
-        drift=(r-q-0.5*sigma**2)*dt,
-        diff=sigma*Math.sqrt(dt);
-  let sum=0,cnt=0;
+const tot = Math.max(1, Math.ceil(T*stepsPerYear)),
+        dt  = T/tot,
+        drift = (r-q-0.5*sigma*sigma)*dt,
+        diff  = sigma*Math.sqrt(dt);
+
+  let payoffSum = 0,  collapseCnt = 0;
   for(let i=0;i<N;i++){
-    let S=S0,hit=false;
+    let S = S0, hit = false;
     for(let s=0;s<tot;s++){
-      S*=Math.exp(drift+diff*randn());
-      if(!hit&&S>=K)hit=true;
+     S *= Math.exp(drift + diff*randn());
+      if(!hit && S >= K) hit = true;          // «кот ожил»
     }
-    if(hit&&S<K){sum+=K-S;cnt++;}
+    if(hit && S < K){                         // «кот снова умер»
+      collapseCnt++;
+      payoffSum += K - S;                     // прежний логик RUO-call
+    }
   }
-  return cnt?sum/N:0;
+return { premium: collapseCnt ? payoffSum/N : 0,
+           rate    : collapseCnt / N };
 }
+
   
 /*──────────── Calculate ───────────*/
 document.getElementById('calcBtn').onclick=()=>{
@@ -385,25 +396,24 @@ document.getElementById('calcBtn').onclick=()=>{
       N=g('N'),steps=g('steps'),nTree=g('priceSteps');
     if(!K||!days||!sigma){alert('Missing strike / sigma / days');return;}
     const T=days/365;
-    let amer,ruo,fair,msg;
+    let amer, ruoObj, fair, msg;
     if(typeSel.value==='call'){
-      amer=americanCallCRR(S0,K,T,r,q,sigma,nTree);
-      ruo=ruoCall(S0,K,T,r,q,sigma,N,steps);
-      fair=amer+ruo;
-          const pCrr=(amer/fair*100).toFixed(1);
-      const pRuo=(ruo /fair*100).toFixed(1);
-      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican call (CRR):     ${amer.toFixed(4)}  (${pCrr}%)\nRUO (missed-downside): ${ruo.toFixed(4)}  (${pRuo}%)\n———————————————\nFair call premium:       ${fair.toFixed(4)}`;
+        amer  = americanCallCRR(S0,K,T,r,q,sigma,nTree);
+      ruoObj= ruoCall(S0,K,T,r,q,sigma,N,steps);          // ★
+      fair  = amer + ruoObj.premium;                      // ★
+      msg = `Underlying S0:          ${S0.toFixed(2)}\nAmerican call (CRR):     ${amer.toFixed(4)}\nRUO (missed-downside):   ${ruoObj.premium.toFixed(4)}\nCollapse freq:           ${(ruoObj.rate*100).toFixed(1)} %\n———————————————\nFair call premium:       ${fair.toFixed(4)}`;
     } else {
-      amer=americanPutCRR(S0,K,T,r,q,sigma,nTree);
-      ruo=ruoPut(S0,K,T,r,q,sigma,N,steps);
-      fair=amer+ruo;
-    const pCrr=(amer/fair*100).toFixed(1);
-      const pRuo=(ruo /fair*100).toFixed(1);
-      msg=`Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):     ${amer.toFixed(4)}  (${pCrr}%)\nRUO (missed-upside):    ${ruo.toFixed(4)}  (${pRuo}%)\n———————————————\nFair put premium:       ${fair.toFixed(4)}`;    
+      amer  = americanPutCRR(S0,K,T,r,q,sigma,nTree);
+      ruoObj= ruoPut(S0,K,T,r,q,sigma,N,steps);           // ★
+      fair  = amer + ruoObj.premium;                      // ★
+      msg = `Underlying S0:          ${S0.toFixed(2)}\nAmerican put (CRR):      ${amer.toFixed(4)}\nRUO (missed-upside):     ${ruoObj.premium.toFixed(4)}\nCollapse freq:           ${(ruoObj.rate*100).toFixed(1)} %\n———————————————\nFair put premium:        ${fair.toFixed(4)}`;
     }
     document.getElementById('output').textContent=msg;
   });
 };
 </script>
+<style>
+  #output { line-height: 1.4; }
+</style>
 </body>
 </html>
